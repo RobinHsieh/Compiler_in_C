@@ -1,0 +1,9 @@
+hj "test_string"
+
+_a_in_y_axis__ "123.575"
+
+printf("HelloWorld")
+
+Element_get.get(index.get()).length()
+
+System.out.print("%d people.\n")

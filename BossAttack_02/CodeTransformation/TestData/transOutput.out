@@ -1,0 +1,26 @@
+"""
+Multiline Comments
+"""
+# This is my first comment.
+if True:
+    print(123)
+    """
+    Oooooo~~~
+    jk
+    """
+print("Oh yeah~~Oh yeah~~")
+------------------------------------
+s m m p i t
+0 1 0 0 0 0 
+0 0 0 0 0 0 Multiline Comments
+0 0 1 0 0 0 
+1 0 0 0 0 0 This is my first comment.
+0 0 0 0 1 0 True
+0 0 0 1 0 1 123
+0 1 0 0 0 1 
+0 0 0 0 0 0     Oooooo~~~
+0 0 0 0 0 0     jk
+0 0 1 0 0 0     
+0 0 0 0 0 0 
+0 0 0 1 0 0 "Oh yeah~~Oh yeah~~"
+------------------------------------

@@ -1,0 +1,189 @@
+Grammar
+
+    0 $accept: start $end
+
+    1 start: term
+
+    2 term: term '+' factor
+    3     | term '-' factor
+    4     | factor
+
+    5 factor: PERMUTATION number number
+    6       | COMBINATION number number
+    7       | number
+
+    8 number: NUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'+' (43) 2
+'-' (45) 3
+error (256)
+NUMBER (258) 8
+PERMUTATION (259) 5
+COMBINATION (260) 6
+
+
+Nonterminals, with rules where they appear
+
+$accept (8)
+    on left: 0
+start (9)
+    on left: 1, on right: 0
+term (10)
+    on left: 2 3 4, on right: 1 2 3
+factor (11)
+    on left: 5 6 7, on right: 2 3 4
+number (12)
+    on left: 8, on right: 5 6 7
+
+
+state 0
+
+    0 $accept: . start $end
+
+    NUMBER       shift, and go to state 1
+    PERMUTATION  shift, and go to state 2
+    COMBINATION  shift, and go to state 3
+
+    start   go to state 4
+    term    go to state 5
+    factor  go to state 6
+    number  go to state 7
+
+
+state 1
+
+    8 number: NUMBER .
+
+    $default  reduce using rule 8 (number)
+
+
+state 2
+
+    5 factor: PERMUTATION . number number
+
+    NUMBER  shift, and go to state 1
+
+    number  go to state 8
+
+
+state 3
+
+    6 factor: COMBINATION . number number
+
+    NUMBER  shift, and go to state 1
+
+    number  go to state 9
+
+
+state 4
+
+    0 $accept: start . $end
+
+    $end  shift, and go to state 10
+
+
+state 5
+
+    1 start: term .
+    2 term: term . '+' factor
+    3     | term . '-' factor
+
+    '+'  shift, and go to state 11
+    '-'  shift, and go to state 12
+
+    $default  reduce using rule 1 (start)
+
+
+state 6
+
+    4 term: factor .
+
+    $default  reduce using rule 4 (term)
+
+
+state 7
+
+    7 factor: number .
+
+    $default  reduce using rule 7 (factor)
+
+
+state 8
+
+    5 factor: PERMUTATION number . number
+
+    NUMBER  shift, and go to state 1
+
+    number  go to state 13
+
+
+state 9
+
+    6 factor: COMBINATION number . number
+
+    NUMBER  shift, and go to state 1
+
+    number  go to state 14
+
+
+state 10
+
+    0 $accept: start $end .
+
+    $default  accept
+
+
+state 11
+
+    2 term: term '+' . factor
+
+    NUMBER       shift, and go to state 1
+    PERMUTATION  shift, and go to state 2
+    COMBINATION  shift, and go to state 3
+
+    factor  go to state 15
+    number  go to state 7
+
+
+state 12
+
+    3 term: term '-' . factor
+
+    NUMBER       shift, and go to state 1
+    PERMUTATION  shift, and go to state 2
+    COMBINATION  shift, and go to state 3
+
+    factor  go to state 16
+    number  go to state 7
+
+
+state 13
+
+    5 factor: PERMUTATION number number .
+
+    $default  reduce using rule 5 (factor)
+
+
+state 14
+
+    6 factor: COMBINATION number number .
+
+    $default  reduce using rule 6 (factor)
+
+
+state 15
+
+    2 term: term '+' factor .
+
+    $default  reduce using rule 2 (term)
+
+
+state 16
+
+    3 term: term '-' factor .
+
+    $default  reduce using rule 3 (term)

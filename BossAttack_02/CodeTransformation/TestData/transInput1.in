@@ -1,0 +1,12 @@
+/*
+Multiline Comments
+*/
+// This is my first comment.
+if(true) {
+    cout << 123 << endl;
+    /*
+    Oooooo~~~
+    jk
+    */
+}
+cout << "Oh yeah~~Oh yeah~~" << endl;

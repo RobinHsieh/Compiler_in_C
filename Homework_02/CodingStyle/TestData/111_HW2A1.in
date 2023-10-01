@@ -1,0 +1,13 @@
+#include<iostream>
+using namespace std;
+
+
+
+int main(){
+for(int fh1=0;fh1<10;fh1++){
+for(int fh2=0;fh2<fh1;fh2++){
+	cout<<"*";
+}
+cout<<"\n";
+}
+}

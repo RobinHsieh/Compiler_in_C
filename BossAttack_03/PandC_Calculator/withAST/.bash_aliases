@@ -1,0 +1,7 @@
+alias p1='bison -d -v -o pc.tab.c pc.y'
+alias p2='gcc -c -g -I.. pc.tab.c'
+alias p3='flex -o pc.yy.c pc.l'
+alias p4='gcc -c -g -I.. pc.yy.c'
+alias p5='gcc -c constructAST.c'
+alias p6='gcc -o pc pc.tab.o pc.yy.o constructAST.o -ll'
+alias p7='./pc < input.in'

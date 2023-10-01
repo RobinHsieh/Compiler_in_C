@@ -1,0 +1,6 @@
+alias m1='bison -d -o matrix_calculator.tab.c matrix_calculator.y'
+alias m2='gcc -c -g -I.. matrix_calculator.tab.c'
+alias m3='flex -o matrix_calculator.yy.c matrix_calculator.l'
+alias m4='gcc -c -g -I.. matrix_calculator.yy.c'
+alias m5='gcc -o matrix_calculator matrix_calculator.tab.o matrix_calculator.yy.o -ll'
+alias m6='./matrix_calculator < input.in'
