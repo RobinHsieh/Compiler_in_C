@@ -1,6 +1,4 @@
-(define x (+ 20 -6 -1 -3))
-
-(define y (/ 8 2))
-
-(print-num (- x y))
-
+(print
+  (+ 
+    (if (eq 1 1) 1 2) (if (eq 1 2) 1 2))
+)

@@ -1,14 +1,17 @@
 #include "constructAST.h"
 
 
-/* data segment */
-SymbolTable* globalLinkedList;
-AddressOfParameter addressOfParameterArray[256];
-int top = -1;
+/* testData segment */
+GlobalSymbolTable* globalLinkedList;
+AddressOfParameterTable addressOfParameterTable[2048];
+int topOfAddressOfParameterTable = -1;
 
-int passedArgumentArray[256];
-int esp = -1;
-int ebp = -1;
+char* currentFunctionNameBeingVisited;
+int anonymousFunctionOrder = 1;
+
+int passedArgumentStack[2048];
+int stackPtrOfArgument = -1;
+int basePtrOfArgument = -1;
 
 
 NodeAST* addNode(NodeType nodeType, int integer, char* string, NodeAST* leftChild, NodeAST* rightChild) {
@@ -46,111 +49,198 @@ void traversalSTATMENT(NodeAST* nodeAst) {
     /* visit part */
     else {
 
-        /* going to print the integer */
-        if (nodeAst->nodeType == NODE_PRINT_NUM) {
+        switch (nodeAst->nodeType) {
 
-            NodeAST* printedNode;
+            /* THIS PART IS PRINT STATEMENT */
+            /* going to print the integer */
+            case NODE_PRINT_NUM:
+            {
+                NodeAST* printedNode;
+                printedNode = evaluateExpression(nodeAst->leftChild);
 
-            /* expression belongs to if-exp */
-            if (nodeAst->leftChild->nodeType == NODE_IF_EXPRESSION) {
+                printf("%d\n", printedNode->integer);
+                break;
+            }
+            /* going to print the boolean */
+            case NODE_PRINT_BOOL:
+            {
+                NodeAST* printedNode;
+                printedNode = evaluateExpression(nodeAst->leftChild);
 
-                /* convert NodeAST to Node_If_AST */
-                Node_If_AST* node_If_Ast = (Node_If_AST*)nodeAst->leftChild;
-                printedNode = evaluateNumerical_And_LogicalExpression(judgeIfExpression(node_If_Ast));
+                if (printedNode->integer == 0) {
+                    printf("%s\n", "#f");
+                }
+                else if (printedNode->integer == -1) {
+                    printf("%s\n", "#t");
+                }
+                break;
             }
 
-                /* expression belongs to num-op/logical-op/number/bool-val */
-            else {
-                printedNode = evaluateNumerical_And_LogicalExpression(nodeAst->leftChild);
+            /* THIS PART IS DEFINE STATEMENT */
+            case NODE_DEFINE:
+            {
+                /* going to define a variable */
+                if (nodeAst->rightChild->nodeType != NODE_FUNCTION) {
+                    /* nodeAst->leftChild->nodeType == NODE_STRING */
+                    /* bind the variable name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild` */
+                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, nodeAst->rightChild, &globalLinkedList);
+                }
+
+                /* going to define a function */
+                else {
+                    /* bind the function name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild->rightChild` */
+//                    puts("hi0!, push function name"); // debug
+                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, nodeAst->rightChild->rightChild, &globalLinkedList);
+
+                    /* push the parameters into AddressOfParameterTable */
+                    traversalPARAMETER(nodeAst->rightChild->leftChild, nodeAst->leftChild->string, 0);
+                }
+                break;
             }
-            printf("%d\n", printedNode->integer);
-        }
-
-        /* going to print the boolean */
-        else if (nodeAst->nodeType == NODE_PRINT_BOOL) {
-
-            NodeAST* printedNode;
-
-            /* expression belongs to if-exp */
-            if (nodeAst->leftChild->nodeType == NODE_IF_EXPRESSION) {
-
-                /* convert NodeAST to Node_If_AST */
-                Node_If_AST* node_If_Ast = (Node_If_AST*)nodeAst->leftChild;
-                printedNode = evaluateNumerical_And_LogicalExpression(judgeIfExpression(node_If_Ast));
-            }
-
-            /* expression belongs to num-op/logical-op/number/bool-val */
-            else {
-                printedNode = evaluateNumerical_And_LogicalExpression(nodeAst->leftChild);
-            }
-            if (printedNode->integer == 0) {
-                printf("%s\n", "#f");
-            }
-            else if (printedNode->integer == -1) {
-                printf("%s\n", "#t");
-            }
-        }
-
-        /* going to define a variable */
-        else if (nodeAst->nodeType == NODE_DEFINE) {
-
-            // nodeAst->leftChild->->nodeType == NODE_STRING
-            push(nodeAst->leftChild->string, nodeAst->rightChild, &globalLinkedList);
+            default:
+                /* shall never pass through here */
+                break;
         }
     }
 }
 
-NodeAST* judgeIfExpression(Node_If_AST* node_If_Ast) {
+NodeAST* evaluateExpression(NodeAST* nodeAst) {
+
+
+    /* return part: leaf node */
+    if (nodeAst->nodeType == NODE_VARIABLE) {
+
+        NodeAST* newNodeAst = malloc(sizeof(NodeAST));
+
+        /* deal with variable */
+        if (strcmp(currentFunctionNameBeingVisited, "-none") == 0) {
+            newNodeAst = evaluateExpression(findGlobalSymbolTableNode(nodeAst->leftChild->string));
+        }
+
+        else {
+            int address = findAddressOfParameterTable(currentFunctionNameBeingVisited, nodeAst->leftChild->string);
+            if (address != 0) {
+                newNodeAst->nodeType = NODE_INTEGER; // It can also be NODE_BOOLEAN, later we will deal with it.
+//                printf("hi4!, stack frame       ,  basePtrOfArgument: %d, address of variable: %d\n", basePtrOfArgument, address); // debug
+                newNodeAst->integer = passedArgumentStack[basePtrOfArgument - address];
+//                printf("hi5!, find result       ,  variable = %d\n", newNodeAst->integer); // debug
+            }
+            else {
+                newNodeAst = evaluateExpression(findGlobalSymbolTableNode(nodeAst->leftChild->string));
+            }
+        }
+        return newNodeAst;
+    }
+
+    else if (nodeAst->nodeType == NODE_INTEGER || nodeAst->nodeType == NODE_BOOLEAN) {
+        return nodeAst;
+    }
+
+
+    /* recursive part: calculate from top to bottom */
+    else if (nodeAst->nodeType == NODE_IF_EXPRESSION) {
+        return judgeIF_EXPRESSION((Node_If_AST*)nodeAst);
+    }
+
+    else if (nodeAst->nodeType == NODE_FUNCTION_CALL) {
+
+        /* handle the function call */
+        return handleFUNCTION_CALL( nodeAst);
+    }
+
+    else {
+        /* recursive part: calculate from bottom to top */
+        NodeAST* left_child = evaluateExpression(nodeAst->leftChild);
+        NodeAST* right_child;
+
+        // prevent NULL when visit NODE_NOT node
+        if (nodeAst->rightChild != NULL) {
+            right_child = evaluateExpression(nodeAst->rightChild);
+        }
+
+        NodeAST* leafNodeAst = malloc(sizeof(NodeAST));
+
+        /* return part: internal node */
+        switch (nodeAst->nodeType) {
+            case NODE_GREATER:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                leafNodeAst->integer = -(left_child->integer > right_child->integer);
+                return leafNodeAst;
+            case NODE_SMALLER:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                leafNodeAst->integer = -(left_child->integer < right_child->integer);
+                return leafNodeAst;
+            case NODE_AND:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                leafNodeAst->integer = left_child->integer & right_child->integer;
+                return leafNodeAst;
+            case NODE_OR:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                leafNodeAst->integer = left_child->integer | right_child->integer;
+                return leafNodeAst;
+            case NODE_NOT:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                leafNodeAst->integer = ~ left_child->integer;
+                return leafNodeAst;
+            case NODE_EQUAL:
+                leafNodeAst->nodeType = NODE_BOOLEAN;
+                /* nodeAst->leftChild is also the "expression: (exp exp)" with nodeAst in "equal: ( = (exp exp) exp ......)" */
+                if (left_child->nodeType == NODE_BOOLEAN) {
+                    if (left_child->integer == 0) {
+                        leafNodeAst->integer = 0;
+                    }
+                    else if (left_child->integer == -1) {
+                        leafNodeAst->integer = -(left_child->rightChild->integer == right_child->integer);
+                    }
+                }
+                else {
+                    leafNodeAst->integer = -(left_child->integer == right_child->integer);
+                }
+                return leafNodeAst;
+            case NODE_ADDITION:
+                leafNodeAst->nodeType = NODE_INTEGER;
+                leafNodeAst->integer = left_child->integer + right_child->integer;
+                return leafNodeAst;
+            case NODE_SUBTRACTION:
+                leafNodeAst->nodeType = NODE_INTEGER;
+                leafNodeAst->integer = left_child->integer - right_child->integer;
+                return leafNodeAst;
+            case NODE_MULTIPLICATION:
+                leafNodeAst->nodeType = NODE_INTEGER;
+                leafNodeAst->integer = left_child->integer * right_child->integer;
+//                printf("hi multiple!, %d\n", leafNodeAst->integer); // debug
+                return leafNodeAst;
+            case NODE_DIVISION:
+                leafNodeAst->nodeType = NODE_INTEGER;
+                leafNodeAst->integer = left_child->integer / right_child->integer;
+                return leafNodeAst;
+            case NODE_MODULUS:
+                leafNodeAst->nodeType = NODE_INTEGER;
+                leafNodeAst->integer = left_child->integer % right_child->integer;
+                return leafNodeAst;
+            default:
+                /* shall never pass through here */
+                return leafNodeAst;
+        }
+    }
+}
+
+NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast) {
 
     int judgement;
 
-    /* expression belongs to if-exp */
-    if (node_If_Ast->testChild->nodeType == NODE_IF_EXPRESSION) {
-
-        /* convert NodeAST to Node_if_AST */
-        Node_If_AST* node_if_Ast = (Node_If_AST*)node_If_Ast->testChild;
-        judgement = evaluateNumerical_And_LogicalExpression(judgeIfExpression(node_if_Ast))->integer;
-    }
-
-    /* expression belongs to num-op/logical-op/number/bool-val */
-    else {
-        judgement = evaluateNumerical_And_LogicalExpression(node_If_Ast->testChild)->integer;
-    }
-
+//    puts("test"); // debug
+    judgement = evaluateExpression(node_If_Ast->testChild)->integer;
 
     if (judgement == -1) {
-
-        /* expression belongs to if-exp */
-        if (node_If_Ast->thenChild->nodeType == NODE_IF_EXPRESSION) {
-
-            /* convert NodeAST to Node_if_AST */
-            Node_If_AST* node_if_Ast = (Node_If_AST*)node_If_Ast->thenChild;
-            return judgeIfExpression(node_if_Ast);
-        }
-
-        /* expression belongs to num-op/logical-op/number/bool-val */
-        else {
-            return node_If_Ast->thenChild;
-        }
+//        puts("then"); // debug
+        return evaluateExpression(node_If_Ast->thenChild);
     }
-
 
     else if (judgement == 0) {
-
-        /* expression belongs to if-exp */
-        if (node_If_Ast->elseChild->nodeType == NODE_IF_EXPRESSION) {
-
-            /* convert NodeAST to Node_if_AST */
-            Node_If_AST* node_if_Ast = (Node_If_AST*)node_If_Ast->elseChild;
-            return judgeIfExpression(node_if_Ast);
-        }
-
-        /* expression belongs to num-op/logical-op/number/bool-val */
-        else {
-            return node_If_Ast->elseChild;
-        }
+//        puts("else"); // debug
+        return evaluateExpression(node_If_Ast->elseChild);
     }
-
 
     else {
         /* shall never pass through here */
@@ -158,98 +248,105 @@ NodeAST* judgeIfExpression(Node_If_AST* node_If_Ast) {
     }
 }
 
-NodeAST* evaluateNumerical_And_LogicalExpression(NodeAST* nodeAst) {
+NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
 
-    /* deal with variable */
-    if (nodeAst->nodeType == NODE_VARIABLE) {
-        nodeAst = findNode(nodeAst->leftChild->string);
+    NodeAST* functionReturnNodeAst;
+    int numberOfArguments = 0;
+
+    /* anonymous function */
+    if (nodeAst->leftChild->nodeType == NODE_FUNCTION) {
+
+        char* functionName = malloc(30);
+        sprintf(functionName, "-anonymous-%d", anonymousFunctionOrder);
+        anonymousFunctionOrder++;
+        currentFunctionNameBeingVisited = functionName;
+
+        /* bind the function name `-anonymous-X` with the expression `nodeAst->leftChild->rightChild` */
+        pushIntoGlobalSymbolTable(functionName, nodeAst->leftChild->rightChild, &globalLinkedList);
+
+        /* push the parameters into AddressOfParameterTable */
+        traversalPARAMETER(nodeAst->leftChild->leftChild, currentFunctionNameBeingVisited, 0);
     }
 
-    /* return part for leaf node */
-    if (nodeAst->nodeType == NODE_INTEGER || nodeAst->nodeType == NODE_BOOLEAN) {
-        return nodeAst;
-    }
-
+    /* named function */
     else {
-        /* recursive part */
-        NodeAST* left_child = evaluateNumerical_And_LogicalExpression(nodeAst->leftChild);
-        NodeAST* right_child;
-        // prevent NULL when visit NODE_NOT node
-        if (nodeAst->rightChild != NULL) {
-            right_child = evaluateNumerical_And_LogicalExpression(nodeAst->rightChild);
-        }
+        currentFunctionNameBeingVisited = nodeAst->leftChild->string;
+    }
 
-        /* return part for internal node */
-        switch (nodeAst->nodeType) {
-            case NODE_GREATER:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                nodeAst->integer = -(left_child->integer > right_child->integer);
-                return nodeAst;
-            case NODE_SMALLER:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                nodeAst->integer = -(left_child->integer < right_child->integer);
-                return nodeAst;
-            case NODE_AND:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                nodeAst->integer = left_child->integer & right_child->integer;
-                return nodeAst;
-            case NODE_OR:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                nodeAst->integer = left_child->integer | right_child->integer;
-                return nodeAst;
-            case NODE_NOT:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                nodeAst->integer = ~ left_child->integer;
-                return nodeAst;
-            case NODE_EQUAL:
-                nodeAst->nodeType = NODE_BOOLEAN;
-                /* nodeAst->leftChild is also the "expression: (exp exp)" with nodeAst in "equal: ( = (exp exp) exp ......)" */
-                if (left_child->nodeType == NODE_BOOLEAN) {
-                    if (left_child->integer == 0) {
-                        nodeAst->integer = 0;
-                    }
-                    else if (left_child->integer == -1) {
-                        nodeAst->integer = -(left_child->rightChild->integer == right_child->integer);
-                    }
-                }
-                else {
-                    nodeAst->integer = -(left_child->integer == right_child->integer);
-                }
-                return nodeAst;
-            case NODE_ADDITION:
-                nodeAst->nodeType = NODE_INTEGER;
-                nodeAst->integer = left_child->integer + right_child->integer;
-                return nodeAst;
-            case NODE_SUBTRACTION:
-                nodeAst->nodeType = NODE_INTEGER;
-                nodeAst->integer = left_child->integer - right_child->integer;
-                return nodeAst;
-            case NODE_MULTIPLICATION:
-                nodeAst->nodeType = NODE_INTEGER;
-                nodeAst->integer = left_child->integer * right_child->integer;
-                return nodeAst;
-            case NODE_DIVISION:
-                nodeAst->nodeType = NODE_INTEGER;
-                nodeAst->integer = left_child->integer / right_child->integer;
-                return nodeAst;
-            case NODE_MODULUS:
-                nodeAst->nodeType = NODE_INTEGER;
-                nodeAst->integer = left_child->integer % right_child->integer;
-                return nodeAst;
-            default:
-                /* shall never pass through here */
-                return nodeAst;
-        }
+    /* traversal arguments tree and push arguments into passed argument stack */
+    traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
+//    printf("hi2!, meet function call,  numberOfArguments = %d\n", numberOfArguments); // debug
+
+    /* push basePtrOfArgument into passed argument stack */
+    stackPtrOfArgument++;
+    passedArgumentStack[stackPtrOfArgument] = basePtrOfArgument;
+    basePtrOfArgument = stackPtrOfArgument;
+
+    /* call the function */
+    functionReturnNodeAst = evaluateExpression(findGlobalSymbolTableNode(currentFunctionNameBeingVisited));
+
+    /* pop basePtrOfArgument from passed argument stack */
+    basePtrOfArgument = passedArgumentStack[stackPtrOfArgument];
+    stackPtrOfArgument--;
+
+    /* pop the arguments from passed argument stack */
+    stackPtrOfArgument -= numberOfArguments;
+
+    /* return to global scope */
+    currentFunctionNameBeingVisited = "-none";
+
+    return functionReturnNodeAst;
+}
+
+void traversalPARAMETER(NodeAST* nodeAst, char* functionName, int offsetAddress) {
+
+    /* visit part */
+    if (nodeAst->nodeType == NODE_STRING) {
+        pushIntoAddressOfParameterTable(functionName, nodeAst->string, offsetAddress);
+//        printf("hi1!, push parameter    ,  node->string: %s, offset: %d\n", nodeAst->string, offsetAddress); // debug
+    }
+
+    /* recursive part */
+    if (nodeAst->leftChild) {
+        traversalPARAMETER(nodeAst->leftChild, functionName, offsetAddress + 1);
+    }
+    if (nodeAst->rightChild) {
+        traversalPARAMETER(nodeAst->rightChild, functionName, offsetAddress + 1);
     }
 }
 
-void push(char* identifier, NodeAST* expression, SymbolTable** head) {
+void traversalARGUMENT(NodeAST* nodeAst, int* numberOfArguments) {
 
-    SymbolTable* directTable = *head;
-    SymbolTable* previousTable = NULL;
+    /* prevent NULL when visit NODE_ARGUMENT node */
+    if (nodeAst == NULL) {
+        return;
+    }
+    else if (nodeAst->nodeType == NODE_ARGUMENT) {
+        /* count the number of arguments */
+        *numberOfArguments = *numberOfArguments + 1;
+
+        /* push arguments into passed argument stack */
+        traversalARGUMENT(nodeAst->rightChild, numberOfArguments);
+        stackPtrOfArgument++;
+        passedArgumentStack[stackPtrOfArgument] = evaluateExpression(nodeAst->leftChild)->integer;
+    }
+}
+
+void pushIntoAddressOfParameterTable(char* functionName, char* identifier, int offsetAddress) {
+    /* push the parameters into AddressOfParameterTable */
+    topOfAddressOfParameterTable++;
+    addressOfParameterTable[topOfAddressOfParameterTable].functionName = functionName;
+    addressOfParameterTable[topOfAddressOfParameterTable].identifier = identifier;
+    addressOfParameterTable[topOfAddressOfParameterTable].offsetAddress = offsetAddress;
+}
+
+void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymbolTable** head) {
+
+    GlobalSymbolTable* directTable = *head;
+    GlobalSymbolTable* previousTable = NULL;
 
     /* create a new directTable */
-    SymbolTable* newTable = malloc(sizeof(SymbolTable));
+    GlobalSymbolTable* newTable = malloc(sizeof(GlobalSymbolTable));
     newTable->identifier = identifier;
     newTable->expression = expression;
     newTable->nextPtr = NULL;
@@ -267,13 +364,11 @@ void push(char* identifier, NodeAST* expression, SymbolTable** head) {
     else {
         *head = newTable;
     }
-
 }
 
+NodeAST* findGlobalSymbolTableNode(char* identifier) {
 
-NodeAST* findNode(char* identifier) {
-
-    SymbolTable* table = globalLinkedList;
+    GlobalSymbolTable* table = globalLinkedList;
 
     /* iteration */
     while (table != NULL) {
@@ -287,8 +382,20 @@ NodeAST* findNode(char* identifier) {
     return table->expression;
 }
 
+int findAddressOfParameterTable(char* functionName, char* identifier) {
+//    printf("hi3!, find variable     ,  functionName: %s, variable: %s\n", functionName, identifier); // debug
+    for (int i = 0; i <= topOfAddressOfParameterTable; i++) {
+        if (strcmp(addressOfParameterTable[i].functionName, functionName) == 0 && strcmp(addressOfParameterTable[i].identifier, identifier) == 0) {
+            return addressOfParameterTable[i].offsetAddress;
+        }
+    }
 
-#if defined(DEBUG)
+    /* if didn't find the address */
+    return 0;
+}
+
+
+#if defined(DEBUG__PRINT_TREE_STRUCTURE)
 void traversalAST_preorder(NodeAST* root) {
     printf("%d\n", root->nodeType);
     if (root->leftChild) {

@@ -1,17 +1,19 @@
 #ifndef FINAL_PROJECT_CONSTRUCTAST_H
 #define FINAL_PROJECT_CONSTRUCTAST_H
 
-//#define DEBUG
+//#define DEBUG__PRINT_TREE_STRUCTURE
+//#define DEBUG__TURN_OFF_TRAVERSAL
+//#define DEBUG__FIX_FUNCTION_CALL
+
 #include <stdlib.h>
 #include <stdio.h>
-#include <limits.h>
 #include <string.h>
 
 typedef enum nodeType NodeType;
-typedef struct symbolTable SymbolTable;
+typedef struct globalSymbolTable GlobalSymbolTable;
 typedef struct nodeAST NodeAST;
 typedef struct node_If_AST Node_If_AST;
-typedef struct addressOfParameter AddressOfParameter;
+typedef struct addressOfParameterTable AddressOfParameterTable;
 
 enum nodeType {
     /* nodeType for leaf nodes */
@@ -36,9 +38,12 @@ enum nodeType {
 
     NODE_PRINT_NUM,         // 14
     NODE_PRINT_BOOL,        // 15
+
     NODE_IF_EXPRESSION,     // 16
+
     NODE_VARIABLE,          // 17
     NODE_DEFINE,            // 18
+
     NODE_PARAMETER,         // 19
     NODE_ARGUMENT,          // 20
     NODE_FUNCTION,          // 21
@@ -47,27 +52,16 @@ enum nodeType {
     NODE_STATEMENT          // 23
 };
 
-struct symbolTable {
+struct globalSymbolTable {
     char* identifier;
     struct nodeAST* expression;
-    struct symbolTable* nextPtr;
+    struct globalSymbolTable* nextPtr;
 };
 
-struct addressOfParameter {
+struct addressOfParameterTable {
+    char* functionName;
     char* identifier;
-    int index;
-};
-
-extern AddressOfParameter addressOfParameterArray[256];
-extern int top;
-
-extern int passedArgumentArray[256];
-extern int esp;
-extern int ebp;
-
-struct passedArgument {
-    int integer;
-    struct passedArgument* nextPtr;
+    int offsetAddress;
 };
 
 struct nodeAST {
@@ -91,16 +85,23 @@ NodeAST* add_If_Node(NodeType nodeType, NodeAST* testChild, NodeAST* thenChild, 
 
 /* interpret Abstract Syntax Tree */
 void traversalSTATMENT(NodeAST* nodeAst);
-NodeAST* judgeIfExpression(Node_If_AST* nodeAst);
-NodeAST* evaluateNumerical_And_LogicalExpression(NodeAST* nodeAst);
-#if defined(DEBUG)
+NodeAST* evaluateExpression(NodeAST* nodeAst);
+NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast);
+NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst);
+void traversalPARAMETER(NodeAST* nodeAst, char* functionName, int parameterOrder);
+void traversalARGUMENT(NodeAST* nodeAst, int* numberOfArguments);
+#if defined(DEBUG__PRINT_TREE_STRUCTURE)
 void traversalAST_preorder(NodeAST* root);
 void traversalAST_inorder(NodeAST* root);
 void traversalAST_postorder(NodeAST* root);
 #endif
 
-/* symbol table */
-void push(char* identifier, NodeAST* expression, SymbolTable** head);
-NodeAST* findNode(char* identifier);
+/* deal with global symbol table */
+void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymbolTable** head);
+NodeAST* findGlobalSymbolTableNode(char* identifier);
+int findAddressOfParameterTable(char* functionName, char* identifier);
+
+/* deal with address of parameter table*/
+void pushIntoAddressOfParameterTable(char* functionName, char* identifier, int offsetAddress);
 
 #endif //FINAL_PROJECT_CONSTRUCTAST_H
