@@ -23,7 +23,7 @@ BOOL_VAL      "#t"|"#f"
 
 %%
 
-"//"          {
+";"           {
               BEGIN IGNORE_COMMENT_STATE;
               }
 
