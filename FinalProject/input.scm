@@ -5,9 +5,9 @@
   (if (= n 0)
       1
       (* n (factorial (- n 1))))))
-(print-num (factorial 5))
+(print-num (factorial 12))
 
-(print-num (= 6 6 6 (* 2 3)))
+(print-bool (= 6 6 6 (* 2 3)))
 
 (define bar (fun (x) (+ x 1)))
 (define bar-y (fun () 1))

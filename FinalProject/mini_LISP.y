@@ -4,7 +4,6 @@
  * A: Because in "mini_LISP.tab.h", there have some data structure need to include "constructAST.h" first */
 #include "constructAST.h"
 #include "mini_LISP.tab.h"
-#include <stdio.h>
 
 
 NodeAST* root;
