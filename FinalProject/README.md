@@ -67,9 +67,9 @@ target_link_libraries(mini_LISP l)
 
 ### Bonus Features
 
-| No. | Feature            | Description                             | Points | Test Case |
-|-----|--------------------|-----------------------------------------|--------|-----------|
-| 1.  | Recursion          | Support recursive function call         | 5      |:o:        |
-| 2.  | Type Checking      | Print error messages for type errors    | 5      |:lock:     |
-| 3.  | Nested Function    | Nested function (static scope)          | 5      |:lock:     |
-| 4.  | First-class Function| Able to pass functions, support closure| 5      |:lock:     |
+| No. | Feature             | Description                                      | Points | Test Case |
+|-----|---------------------|--------------------------------------------------|--------|-----------|
+| 1.  | Recursion           | Support recursive function call                  | 5      |:o:        |
+| 2.  | Type Checking       | Print error messages for type errors             | 5      |:lock:     |
+| 3.  | Nested Function     | Nested function (static scope)                   | 5      |:lock:     |
+| 4.  | First-class Function| Able to pass functions, support closure          | 5      |:lock:     |
