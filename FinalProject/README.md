@@ -54,9 +54,9 @@ target_link_libraries(mini_LISP l)
 
 ### Basic Features
 
-| No. | Feature             | Description                                      | Points | Test Case |
+| No. | <div style="width: 100pt">Feature</div> | <div style="width: 200pt">Description</div> | Points | Test Case |
 |-----|---------------------|--------------------------------------------------|--------|-----------|
-| 1.  | <div style="width: 50pt">Syntax Validation</div>   | Print “syntax error” when parsing invalid syntax | 10     |:o:        |
+| 1.  | Syntax Validation   | Print “syntax error” when parsing invalid syntax | 10     |:o:        |
 | 2.  | Print               | Implement print-num statement                    | 10     |:o:        |
 | 3.  | Numerical Operations| Implement all numerical operations               | 25     |:o:        |
 | 4.  | Logical Operations  | Implement all logical operations                 | 25     |:o:        |
@@ -67,9 +67,9 @@ target_link_libraries(mini_LISP l)
 
 ### Bonus Features
 
-| No. | Feature             | Description                                      | Points | Test Case |
+| No. | <div style="width: 100pt">Feature</div> | <div style="width: 200pt">Description</div> | Points | Test Case |
 |-----|---------------------|--------------------------------------------------|--------|-----------|
-| 1.  | <div style="width: 50pt">Recursion</div>           | Support recursive function call                  | 5      |:o:        |
+| 1.  | Recursion           | Support recursive function call                  | 5      |:o:        |
 | 2.  | Type Checking       | Print error messages for type errors             | 5      |:lock:     |
 | 3.  | Nested Function     | Nested function (static scope)                   | 5      |:lock:     |
 | 4.  | First-class Function| Able to pass functions, support closure          | 5      |:lock:     |
