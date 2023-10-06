@@ -1,0 +1,79 @@
+(print-num
+(if
+    (if
+        (= 9 (* 2 5))
+        #t
+        (if
+            #t
+            #f
+            #t
+        )
+    )
+    0
+    (if
+        #t
+        1
+        2
+    )
+)
+)
+
+(print-num
+(if
+    (if
+        (= 9 (* 2 5))
+        #t
+        (if
+            #t
+            #f
+            #t
+        )
+    )
+    0
+    (if
+        #f
+        1
+        2
+    )
+)
+)
+
+(print-bool
+(if
+    (if
+        (= 9 (* 2 5))
+        #t
+        (if
+            #t
+            #f
+            #t
+        )
+    )
+    0
+    (if
+        #t
+        #t
+        #f
+    )
+)
+)
+
+(print-bool
+(if
+    (if
+        (= 9 (* 2 5))
+        #t
+        (if
+            #t
+            #f
+            #t
+        )
+    )
+    0
+    (if
+        #f
+        #t
+        #f
+    )
+)
+)
