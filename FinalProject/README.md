@@ -54,7 +54,7 @@ target_link_libraries(mini_LISP l)
 
 ### Basic Features
 
-| No. | <div style="width: 150px">Feature</div> | <div style="width: 310px">Description</div> | Points | Test Case |
+| No. | ~~~~~ Feature ~~~~~ | ~~~~~~~~~~~~~~~~~ Description ~~~~~~~~~~~~~~~~~~ | Points | Test Case |
 |-----|---------------------|--------------------------------------------------|--------|-----------|
 | 1.  | Syntax Validation   | Print “syntax error” when parsing invalid syntax | 10     |:o:        |
 | 2.  | Print               | Implement print-num statement                    | 10     |:o:        |
@@ -67,7 +67,7 @@ target_link_libraries(mini_LISP l)
 
 ### Bonus Features
 
-| No. | <div style="width: 150px">Feature</div> | <div style="width: 310px">Description</div> | Points | Test Case |
+| No. | ~~~~~ Feature ~~~~~ | ~~~~~~~~~~~~~~~~~ Description ~~~~~~~~~~~~~~~~~~ | Points | Test Case |
 |-----|---------------------|--------------------------------------------------|--------|-----------|
 | 1.  | Recursion           | Support recursive function call                  | 5      |:o:        |
 | 2.  | Type Checking       | Print error messages for type errors             | 5      |:lock:     |
