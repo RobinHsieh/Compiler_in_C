@@ -3,7 +3,7 @@
 This project involves implementing an interpreter for variations of Scheme, a dialect of Lisp. However, the grammar of this language deviates slightly, and the functions implemented represent a subset of Scheme.
 
 ## Getting Started
-You can complie it by two ways.
+You can compile it by two ways.
 ### 1. Shell script
 ```bash
 bison -d -v -o mini_LISP.tab.c mini_LISP.y
