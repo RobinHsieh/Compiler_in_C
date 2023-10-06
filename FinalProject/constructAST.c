@@ -239,13 +239,9 @@ NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast) {
         return evaluateExpression(node_If_Ast->thenChild);
     }
 
-    else if (judgement == 0) {
-        return evaluateExpression(node_If_Ast->elseChild);
-    }
-
+    /* (judgement == 0) */
     else {
-        /* shall never pass through here */
-        return (NodeAST*)node_If_Ast;
+        return evaluateExpression(node_If_Ast->elseChild);
     }
 }
 
@@ -257,29 +253,34 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
     /* anonymous function */
     if (nodeAst->leftChild->nodeType == NODE_FUNCTION) {
 
+        /* create a new function name `-anonymous-X` */
         char* functionName = malloc(20);
         sprintf(functionName, "-anonymous-%d", anonymousFunctionOrder);
         anonymousFunctionOrder++;
+        
+        /* update the current fuction scope */
         topOfActiveFunctionNameStack++;
         activeFunctionNameStack[topOfActiveFunctionNameStack] = functionName;
 
         /* bind the function name `-anonymous-X` with the expression `nodeAst->leftChild->rightChild` */
         pushIntoGlobalSymbolTable(functionName, nodeAst->leftChild->rightChild, &globalLinkedList);
 
-        /* push the parameters into AddressOfParameterTable */
+        /* push parameters into AddressOfParameterTable */
         traversalPARAMETER(nodeAst->leftChild->leftChild, activeFunctionNameStack[topOfActiveFunctionNameStack], 0);
     }
 
     /* named function */
     else {
+
+        /* update the current fuction scope */
         topOfActiveFunctionNameStack++;
         activeFunctionNameStack[topOfActiveFunctionNameStack] = nodeAst->leftChild->string;
     }
 
-    /* traversal arguments tree and push arguments into passed argument stack */
+    /* traversal arguments tree and push arguments into the passed argument stack */
     traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
 
-    /* push basePtrOfArgument into passed argument stack */
+    /* push basePtrOfArgument into the passed argument stack */
     stackPtrOfArgument++;
     passedArgumentStack[stackPtrOfArgument] = basePtrOfArgument;
     basePtrOfArgument = stackPtrOfArgument;
@@ -287,14 +288,14 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
     /* call the function */
     functionReturnNodeAst = evaluateExpression(findGlobalSymbolTableNode(activeFunctionNameStack[topOfActiveFunctionNameStack]));
 
-    /* pop basePtrOfArgument from passed argument stack */
+    /* pop basePtrOfArgument from the passed argument stack */
     basePtrOfArgument = passedArgumentStack[stackPtrOfArgument];
     stackPtrOfArgument--;
 
-    /* pop the arguments from passed argument stack */
+    /* pop arguments from the passed argument stack */
     stackPtrOfArgument -= numberOfArguments;
 
-    /* return scope */
+    /* return the fuction scope */
     topOfActiveFunctionNameStack--;
 
     return functionReturnNodeAst;
