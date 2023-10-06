@@ -56,7 +56,6 @@ stmt           : exp | def_stmt | print_stmt
 
 print_stmt     : '(' PRINT_NUM exp ')' {
                $$ = addNode(NODE_PRINT_NUM, 0, NULL, $3, NULL);
-               // puts("( PRINT_NUM exp ) -> print_stmt");//
                }
                | '(' PRINT_BOOL exp ')' {
                $$ = addNode(NODE_PRINT_BOOL, 0, NULL, $3, NULL);
@@ -68,11 +67,9 @@ exp            : BOOL_VAL {
                }
                | NUMBER {
                $$ = addNode(NODE_INTEGER, $1, NULL, NULL, NULL);
-               // puts("NUMBER -> exp");//
                }
                | variable {
                $$ = addNode(NODE_VARIABLE, 0, NULL, $1, NULL);
-               // puts("variable -> exp");//
                }
                | num_op | logical_op
                | fun_exp | fun_call | if_exp
@@ -206,13 +203,11 @@ variable       : ID {
 
 fun_exp        : '(' FUNCTION fun_ids fun_body ')' {
                $$ = addNode(NODE_FUNCTION, 0, NULL, $3, $4);
-               // puts("( FUNCTION fun_ids fun_body ) -> fun_exp");//
                }
                ;
 
 fun_ids        : '(' ids ')' {
                $$ = $2;
-               // puts("( ids ) -> fun_ids");//
                }
                ;
 
@@ -229,27 +224,22 @@ fun_body       : exp
 
 fun_call       : '(' fun_exp params ')' {
                $$ = addNode(NODE_FUNCTION_CALL, 0, NULL, $2, $3);
-               // puts("( fun_exp params ) -> fun_call");//
                }
                | '(' fun_name params ')' {
                $$ = addNode(NODE_FUNCTION_CALL, 0, NULL, $2, $3);
-               // puts("( fun_name params ) -> fun_call");//
                }
                ;
 
 params         : exp params {
                $$ = addNode(NODE_ARGUMENT, 0, NULL, $1, $2);
-               // puts("exp params -> params");//
                }
                | {
                $$ = NULL;
-               // puts("/empty/ -> params");//
                }
                ;
 
 fun_name       : ID {
                $$ = addNode(NODE_STRING, 0, $1, NULL, NULL);
-               // puts("ID -> fun_name");//
                }
                ;
 
@@ -283,8 +273,12 @@ int main(int argc, char *argv[]) {
     traversalAST_postorder(root);
     puts("-------------");
 #endif
+    activeFunctionNameStack[0] = "-none";
 #if !defined(DEBUG__TURN_OFF_TRAVERSAL)
     traversalSTATMENT(root);
+#endif
+#if defined(DEBUG__TURN_OFF_TRAVERSAL)
+    puts("Parsing success!");
 #endif
     return 0;
 }

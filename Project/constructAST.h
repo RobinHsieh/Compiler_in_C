@@ -64,6 +64,9 @@ struct addressOfParameterTable {
     int offsetAddress;
 };
 
+
+extern char* activeFunctionNameStack[2048];
+
 struct nodeAST {
     NodeType nodeType;
     int integer;

@@ -89,10 +89,8 @@ BOOL_VAL      "#t"|"#f"
               }
 
 {ID}          {
-              // printf("%d\n", yyleng + 1); //
               yylval.string = malloc(yyleng + 1);
               strcpy(yylval.string, yytext);
-              // printf("%s\n", yylval.string);
               return ID;
               }
 
