@@ -324,47 +324,28 @@ linkStyle 8 stroke:green;
 linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
 ```
 
-```Latex
-\[
+## Stack Frame
+
+### Exponentiation
+
+```scheme
+(define power
+  (fun (a b)
+    (if (= b 0)
+        1
+        (* a (power a (- b 1))))))
+
+(print-num (power 2 3))
+```
+
+$$
 a^b = 
 \begin{cases} 
 1 & \text{if } b = 0 \\
 a \times a^{(b-1)} & \text{otherwise}
 \end{cases}
-\]
-```
+$$
 
+<img src="image/stack_frame.jpg" width="320" height="550">
 
-![StackFrame](data:image/svg+xml;base64,Cjxzdmcgd2lkdGg9IjMyMCIgaGVpZ2h0PSI1NTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHRleHQgeD0iMzUiIHk9IjM1IiBmb250LXNpemU9IjE4Ij5lYnAtPjwvdGV4dD4KICA8dGV4dCB4PSIyNjUiIHk9IjM1IiBmb250LXNpemU9IjE4Ij48LWVzcDwvdGV4dD4KICA8cmVjdCB4PSIxMDAiIHk9IjEwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBzdHJva2U9InB1cnBsZSIgZmlsbD0iZ3JheSIvPgogIDx0ZXh0IHg9IjEyNSIgeT0iMzUiIGZvbnQtc2l6ZT0iMTgiPjR0aCBvbGQgZWJwPC90ZXh0PgogIDxyZWN0IHg9IjEwMCIgeT0iNTAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHN0cm9rZT0icHVycGxlIiBmaWxsPSJub25lIi8+CiAgPHRleHQgeD0iMTI1IiB5PSI3NSIgZm9udC1zaXplPSIxOCI+YT0yPC90ZXh0PgogIDxyZWN0IHg9IjEwMCIgeT0iOTAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHN0cm9rZT0icHVycGxlIiBmaWxsPSJub25lIi8+CiAgPHRleHQgeD0iMTI1IiB5PSIxMTUiIGZvbnQtc2l6ZT0iMTgiPmI9MDwvdGV4dD4KICA8cmVjdCB4PSIxMDAiIHk9IjEzMCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSI0MCIgc3Ryb2tlPSJwdXJwbGUiIGZpbGw9ImdyYXkiLz4KICA8dGV4dCB4PSIxMjUiIHk9IjE1NSIgZm9udC1zaXplPSIxOCI+M3JkIG9sZCBlYnA8L3RleHQ+CiAgPHJlY3QgeD0iMTAwIiB5PSIxNzAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHN0cm9rZT0icHVycGxlIiBmaWxsPSJub25lIi8+CiAgPHRleHQgeD0iMTI1IiB5PSIxOTUiIGZvbnQtc2l6ZT0iMTgiPmE9MjwvdGV4dD4KICA8cmVjdCB4PSIxMDAiIHk9IjIxMCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSI0MCIgc3Ryb2tlPSJwdXJwbGUiIGZpbGw9Im5vbmUiLz4KICA8dGV4dCB4PSIxMjUiIHk9IjIzNSIgZm9udC1zaXplPSIxOCI+Yj0xPC90ZXh0PgogIDxyZWN0IHg9IjEwMCIgeT0iMjUwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBzdHJva2U9InB1cnBsZSIgZmlsbD0iZ3JheSIvPgogIDx0ZXh0IHg9IjEyNSIgeT0iMjc1IiBmb250LXNpemU9IjE4Ij4ybmQgb2xkIGVicDwvdGV4dD4KICA8cmVjdCB4PSIxMDAiIHk9IjI5MCIgd2lkdGg9IjE1MCIgaGVpZ2h0PSI0MCIgc3Ryb2tlPSJwdXJwbGUiIGZpbGw9Im5vbmUiLz4KICA8dGV4dCB4PSIxMjUiIHk9IjMxNSIgZm9udC1zaXplPSIxOCI+YT0yPC90ZXh0PgogIDxyZWN0IHg9IjEwMCIgeT0iMzMwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBzdHJva2U9InB1cnBsZSIgZmlsbD0ibm9uZSIvPgogIDx0ZXh0IHg9IjEyNSIgeT0iMzU1IiBmb250LXNpemU9IjE4Ij5iPTM8L3RleHQ+CiAgPHJlY3QgeD0iMTAwIiB5PSIzNzAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHN0cm9rZT0icHVycGxlIiBmaWxsPSJncmF5Ii8+CiAgPHRleHQgeD0iMTI1IiB5PSIzOTUiIGZvbnQtc2l6ZT0iMTgiPjFzdCBvbGQgZWJwPC90ZXh0PgogIDxyZWN0IHg9IjEwMCIgeT0iNDEwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBzdHJva2U9InB1cnBsZSIgZmlsbD0ibm9uZSIvPgogIDx0ZXh0IHg9IjEyNSIgeT0iNDM1IiBmb250LXNpemU9IjE4Ij5hPTI8L3RleHQ+CiAgPHJlY3QgeD0iMTAwIiB5PSI0NTAiIHdpZHRoPSIxNTAiIGhlaWdodD0iNDAiIHN0cm9rZT0icHVycGxlIiBmaWxsPSJub25lIi8+CiAgPHRleHQgeD0iMTI1IiB5PSI0NzUiIGZvbnQtc2l6ZT0iMTgiPmI9MzwvdGV4dD4KICA8dGV4dCB4PSI4MiIgeT0iNTEwIiBmb250LXNpemU9IjIwIj5TdGFjayBncm93cyB1cHdhcmRzPC90ZXh0Pgo8L3N2Zz4K)
-
-
-<svg width="320" height="550" xmlns="http://www.w3.org/2000/svg">
-  <text x="35" y="35" font-size="18">ebp-></text>
-  <text x="265" y="35" font-size="18"><-esp</text>
-  <rect x="100" y="10" width="150" height="40" stroke="purple" fill="gray"/>
-  <text x="125" y="35" font-size="18">4th old ebp</text>
-  <rect x="100" y="50" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="75" font-size="18">a=2</text>
-  <rect x="100" y="90" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="115" font-size="18">b=0</text>
-  <rect x="100" y="130" width="150" height="40" stroke="purple" fill="gray"/>
-  <text x="125" y="155" font-size="18">3rd old ebp</text>
-  <rect x="100" y="170" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="195" font-size="18">a=2</text>
-  <rect x="100" y="210" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="235" font-size="18">b=1</text>
-  <rect x="100" y="250" width="150" height="40" stroke="purple" fill="gray"/>
-  <text x="125" y="275" font-size="18">2nd old ebp</text>
-  <rect x="100" y="290" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="315" font-size="18">a=2</text>
-  <rect x="100" y="330" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="355" font-size="18">b=3</text>
-  <rect x="100" y="370" width="150" height="40" stroke="purple" fill="gray"/>
-  <text x="125" y="395" font-size="18">1st old ebp</text>
-  <rect x="100" y="410" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="435" font-size="18">a=2</text>
-  <rect x="100" y="450" width="150" height="40" stroke="purple" fill="none"/>
-  <text x="125" y="475" font-size="18">b=3</text>
-  <text x="82" y="510" font-size="20">Stack grows upwards</text>
-</svg>
 
