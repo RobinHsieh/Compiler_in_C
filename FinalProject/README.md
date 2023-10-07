@@ -76,8 +76,46 @@ target_link_libraries(mini_LISP l)
 
 
 ## AST Structure
+Basic structure of nodes in AST is shown below.
+```mermaid
+---
+title: nodeAST
+---
+classDiagram
+    class nodeAST{
+        +enum nodeType
+        +int integer
+        +char* string
+        +nodeAST* leftChild
+        +nodeAST* rightChild
+    }
+    class leftChild
+    class rightChild
+    leftChild <|-- nodeAST
+    rightChild <|-- nodeAST
+```
+```mermaid
+---
+title: node_If_AST
+---
+classDiagram
+    class node_If_AST{
+        +enum nodeType
+        +nodeAST* testChild
+        +nodeAST* thenChild
+        +nodeAST* elseChild
+    }
+    class testChild
+    class thenChild
+    class elseChild
+    testChild <|-- node_If_AST
+    thenChild <|-- node_If_AST
+    elseChild <|-- node_If_AST
+```
 
-#### 7. Anonymouse Funcion
+Here are some examples of AST structure.
+
+#### 7. Anonymous Funcion
 
 ```scheme
 (print-num ((fun (x) (+ x 1)) 3))
