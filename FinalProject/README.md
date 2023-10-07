@@ -158,6 +158,8 @@ graph TB
 
 linkStyle 0,2 stroke:orange;
 linkStyle 1,3 stroke:purple;
+classDef gray fill:gray;
+class 3,103 gray;
 ```
 
 #### Statement
@@ -180,6 +182,8 @@ graph TB
 
 linkStyle 0,2,3,5,6 stroke:orange;
 linkStyle 1,4 stroke:purple;
+classDef gray fill:gray;
+class 23,123 gray;
 ```
 
 #### Parameter
@@ -198,6 +202,8 @@ graph TB
 
 linkStyle 0,2,4 stroke:orange;
 linkStyle 1,3 stroke:purple;
+classDef gray fill:gray;
+class 19,119,219 gray;
 ```
 
 #### Argument
@@ -219,6 +225,8 @@ graph TB
 
 linkStyle 0,2,4,5,7 stroke:orange;
 linkStyle 1,3,6 stroke:purple;
+classDef gray fill:gray;
+class 20,120,220 gray;
 ```
 
 ####  Anonymous Funcion
