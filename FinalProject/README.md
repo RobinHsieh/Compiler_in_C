@@ -113,6 +113,34 @@ classDiagram
     elseChild <|-- node_If_AST
 ```
 
+Node Types are defined as follows.
+* nodeType for leaf nodes
+0. _`NODE_INTEGER`_
+1. _`NODE_BOOLEAN`_
+2. _`NODE_STRING`_
+* nodeType for internal nodes
+3. _`NODE_ADDITION`_
+4. _`NODE_SUBTRACTION`_
+5. _`NODE_MULTIPLICATION`_
+6. _`NODE_DIVISION`_
+7. _`NODE_MODULUS`_
+8. _`NODE_GREATER`_
+9. _`NODE_SMALLER`_
+10. _`NODE_EQUAL`_
+11. _`NODE_AND`_
+12. _`NODE_OR`_
+13. _`NODE_NOT`_
+14. _`NODE_PRINT_NUM`_
+15. _`NODE_PRINT_BOOL`_
+16. _`NODE_IF_EXPRESSION`_
+17. _`NODE_VARIABLE`_
+18. _`NODE_DEFINE`_
+19. _`NODE_PARAMETER`_
+20. _`NODE_ARGUMENT`_
+21. _`NODE_FUNCTION`_
+22. _`NODE_FUNCTION_CALL`_
+23. _`NODE_STATEMENT`_
+
 Here are some examples of AST structure.
 
 #### 7. Anonymous Funcion
