@@ -324,4 +324,25 @@ linkStyle 8 stroke:green;
 linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
 ```
 
+<svg width="200" height="480" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="35" font-size="18">old ebp3</text>
+  <rect x="10" y="50" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="75" font-size="18">n=3</text>
+  <rect x="10" y="90" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="115" font-size="18">k=0</text>
+  <rect x="10" y="130" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="155" font-size="18">old ebp2</text>
+  <rect x="10" y="170" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="195" font-size="18">n=4</text>
+  <rect x="10" y="210" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="235" font-size="18">k=1</text>
+  <rect x="10" y="250" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="275" font-size="18">old ebp1</text>
+  <rect x="10" y="290" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="315" font-size="18">n=5</text>
+  <rect x="10" y="330" width="180" height="40" stroke="black" fill="none"/>
+  <text x="15" y="355" font-size="18">k=2</text>
+  <text x="15" y="400" font-size="20">Stack grows upwards</text>
+</svg>
 
