@@ -76,7 +76,7 @@ target_link_libraries(mini_LISP l)
 
 
 ## AST Structure
-Basic structure of nodes in AST is shown below.
+### Basic structure of nodes in AST is shown below.
 ```mermaid
 ---
 title: nodeAST
@@ -113,7 +113,7 @@ classDiagram
     elseChild <|-- node_If_AST
 ```
 
-Node Types are defined as follows.
+### Node Types are defined as follows.
 * nodeType for leaf nodes
 0. _`NODE_INTEGER`_
 1. _`NODE_BOOLEAN`_
@@ -141,7 +141,7 @@ Node Types are defined as follows.
 22. _`NODE_FUNCTION_CALL`_
 23. _`NODE_STATEMENT`_
 
-Here are some examples of AST structure.
+### Here are some examples of AST structure.
 
 #### 7. Anonymous Funcion
 
@@ -165,4 +165,34 @@ graph TB
 linkStyle 0,1,3,5,6,8,9 stroke:orange;
     
 linkStyle 2,4,7 stroke:purple;
+```
+
+#### 8. Named Funcion
+
+```scheme
+```
+        
+```mermaid
+graph TB
+
+```
+
+#### 9. Recursion
+
+```scheme
+(define factorial
+  (fun (x)
+    (if
+      (= x 1)
+      x
+      (* x (factorial (- x 1)))
+    )
+  )
+)
+
+(print-num (factorial 4))
+```
+        
+```mermaid
+graph TB
 ```
