@@ -75,14 +75,28 @@ target_link_libraries(mini_LISP l)
 | 4.  | First-class Function| Able to pass functions, support closure          | 5      |:construction:|
 
 
-- 14
-    - 22
-        - 21
-            - 19
-                - 2
-            - 3
-                - 17
-                    - 102
-                - 0
-        - 20
-            - 100
+## AST Structure
+
+#### 7. Anonymouse Funcion
+
+```scheme
+(print-num ((fun (x) (+ x 1)) 3))
+```
+
+```mermaid
+graph TB
+14(NODE_PRINT_NUM) --> 22(NODE_FUNCTION_CALL)
+22 --> 21(NODE_FUNCTION)
+22 --> 20(NODE_ARGUMENT)
+21 --> 19(NODE_PARAMETER)
+21 --> 3(NODE_ADDITION)
+19 --> 2(NODE_STRING\nx)
+3 --> 17(NODE_VARIABLE)
+3 --> 0(NODE_INTEGER\n1)
+17 --> 102(NODE_STRING\nx)
+20 --> 100(NODE_INTEGER\n3)
+
+linkStyle 0,1,3,5,6,8,9 stroke:orange;
+    
+linkStyle 2,4,7 stroke:purple;
+```
