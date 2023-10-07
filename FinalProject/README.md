@@ -181,7 +181,6 @@ graph TB
 linkStyle 0,2,3,5,6 stroke:orange;
 linkStyle 1,4 stroke:purple;
 ```
-```
 
 #### Parameter
 
