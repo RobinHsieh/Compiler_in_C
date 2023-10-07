@@ -143,7 +143,7 @@ classDiagram
 
 ### Here are some examples of AST structure.
 
-#### 7. Anonymous Funcion
+####  Anonymous Funcion
 
 ```scheme
 (print-num ((fun (x) (+ x 1)) 3))
@@ -163,21 +163,48 @@ graph TB
 20 --> 100(NODE_INTEGER\n3)
 
 linkStyle 0,1,3,5,6,8,9 stroke:orange;
-    
 linkStyle 2,4,7 stroke:purple;
 ```
 
-#### 8. Named Funcion
+#### Parameter
 
 ```scheme
+(x y z)
 ```
-        
+
 ```mermaid
 graph TB
+19(NODE_PARAMETER) --> 2(NODE_STRING\nx)
+19 --> 119(NODE_PARAMETER)
+119 --> 102(NODE_STRING\ny)
+119 --> 219(NODE_PARAMETER)
+219 --> 202(NODE_STRING\nz)
 
+linkStyle 0,2,4 stroke:orange;
+linkStyle 1,3 stroke:purple;
+```
+#### Argument
+
+```scheme
+(function-name 4 3 (- x 1))
 ```
 
-#### 9. Recursion
+```mermaid
+graph TB
+20(NODE_ARGUMENT) --> 0(NODE_INTEGER\n4)
+20 --> 120(NODE_ARGUMENT)
+120 --> 100(NODE_INTEGER\n3)
+120 --> 220(NODE_ARGUMENT)
+220 --> 4(NODE_SUBTRACTION)
+4 --> 17(NODE_VARIABLE)
+4 --> 200(NODE_INTEGER\n1)
+17 --> 2(NODE_STRING\nx)
+
+linkStyle 0,2,4,5,7 stroke:orange;
+linkStyle 1,3,6 stroke:purple;
+```
+
+####  Recursion
 
 ```scheme
 (define factorial
@@ -223,8 +250,6 @@ graph TB
 220 --> 300(NODE_INTEGER\n4)
 
 linkStyle 0,2,4,6,7,10,12,13,15,16,18,19,21,22,23,25 stroke:orange;
-
 linkStyle 8 stroke:green;
-    
 linkStyle 1,3,5,9,11,14,17,20,24 stroke:purple;
 ```
