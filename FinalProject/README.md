@@ -143,6 +143,49 @@ classDiagram
 
 ### Here are some examples of AST structure.
 
+#### Addition, Muliplication, Equal
+
+```scheme
+(OP 1 2 3)
+```
+
+```mermaid
+graph TB
+3(OP) --> 103(OP)
+3 --> 200(NODE_INTEGER\n3)
+103 --> 300(NODE_INTEGER\n1)
+103 --> 400(NODE_INTEGER\n2)
+
+linkStyle 0,2 stroke:orange;
+linkStyle 1,3 stroke:purple;
+```
+
+#### Statement
+
+```scheme
+(print-num 1)
+(print-num 2)
+(print-num 3)
+```
+
+#### Parameter
+
+```scheme
+(x y z)
+```
+
+```mermaid
+graph TB
+19(NODE_PARAMETER) --> 2(NODE_STRING\nx)
+19 --> 119(NODE_PARAMETER)
+119 --> 102(NODE_STRING\ny)
+119 --> 219(NODE_PARAMETER)
+219 --> 202(NODE_STRING\nz)
+
+linkStyle 0,2,4 stroke:orange;
+linkStyle 1,3 stroke:purple;
+```
+
 ####  Anonymous Funcion
 
 ```scheme
@@ -166,23 +209,6 @@ linkStyle 0,1,3,5,6,8,9 stroke:orange;
 linkStyle 2,4,7 stroke:purple;
 ```
 
-#### Parameter
-
-```scheme
-(x y z)
-```
-
-```mermaid
-graph TB
-19(NODE_PARAMETER) --> 2(NODE_STRING\nx)
-19 --> 119(NODE_PARAMETER)
-119 --> 102(NODE_STRING\ny)
-119 --> 219(NODE_PARAMETER)
-219 --> 202(NODE_STRING\nz)
-
-linkStyle 0,2,4 stroke:orange;
-linkStyle 1,3 stroke:purple;
-```
 #### Argument
 
 ```scheme
