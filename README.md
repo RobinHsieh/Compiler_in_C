@@ -350,7 +350,8 @@ $$
 
 #### Schematic diagram
 
-As shown in the schematic diagram, at this time, `a = passedArgumentStack[basePtr-1] = 2`, `b = passedArgumentStack[basePtr-2] = 0`
+As shown in the schematic diagram, at this time:\
+`a = passedArgumentStack[basePtr - 1] = 2`, `b = passedArgumentStack[basePtr - 2] = 0`
 
 <img src="image/stack_frame.png" width="680" height="540">
 
