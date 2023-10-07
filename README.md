@@ -328,6 +328,7 @@ linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
 
 ### Exponentiation
 
+#### Program
 ```scheme
 (define power
   (fun (a b)
@@ -338,6 +339,7 @@ linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
 (print-num (power 2 3))
 ```
 
+#### Mathmatical expression
 $$
 a^b = 
 \begin{cases} 
@@ -346,6 +348,10 @@ a \times a^{(b-1)} & \text{otherwise}
 \end{cases}
 $$
 
+#### Schematic diagram
 <img src="image/stack_frame.jpg" width="320" height="550">
+
+As shown in the schematic diagram, at this time,\
+ `a = ebp - 1 = 2`, `b = ebp - 2 = 0`
 
 
