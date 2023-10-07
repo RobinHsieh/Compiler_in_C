@@ -168,6 +168,21 @@ linkStyle 1,3 stroke:purple;
 (print-num 3)
 ```
 
+```mermaid
+graph TB
+23(NODE_STATEMENT) --> 123(NODE_STATEMENT)
+23 --> 214(NODE_PRINT_NUM)
+123 --> 314(NODE_PRINT_NUM)
+314 --> 0(NODE_INTEGER\n1)
+123 --> 414(NODE_PRINT_NUM)
+414 --> 100(NODE_INTEGER\n2)
+214 --> 400(NODE_INTEGER\n3)
+
+linkStyle 0,2,3,5,6 stroke:orange;
+linkStyle 1,4 stroke:purple;
+```
+```
+
 #### Parameter
 
 ```scheme
@@ -184,6 +199,27 @@ graph TB
 
 linkStyle 0,2,4 stroke:orange;
 linkStyle 1,3 stroke:purple;
+```
+
+#### Argument
+
+```scheme
+(function-name 4 3 (- x 1))
+```
+
+```mermaid
+graph TB
+20(NODE_ARGUMENT) --> 0(NODE_INTEGER\n4)
+20 --> 120(NODE_ARGUMENT)
+120 --> 100(NODE_INTEGER\n3)
+120 --> 220(NODE_ARGUMENT)
+220 --> 4(NODE_SUBTRACTION)
+4 --> 17(NODE_VARIABLE)
+4 --> 200(NODE_INTEGER\n1)
+17 --> 2(NODE_STRING\nx)
+
+linkStyle 0,2,4,5,7 stroke:orange;
+linkStyle 1,3,6 stroke:purple;
 ```
 
 ####  Anonymous Funcion
@@ -207,27 +243,6 @@ graph TB
 
 linkStyle 0,1,3,5,6,8,9 stroke:orange;
 linkStyle 2,4,7 stroke:purple;
-```
-
-#### Argument
-
-```scheme
-(function-name 4 3 (- x 1))
-```
-
-```mermaid
-graph TB
-20(NODE_ARGUMENT) --> 0(NODE_INTEGER\n4)
-20 --> 120(NODE_ARGUMENT)
-120 --> 100(NODE_INTEGER\n3)
-120 --> 220(NODE_ARGUMENT)
-220 --> 4(NODE_SUBTRACTION)
-4 --> 17(NODE_VARIABLE)
-4 --> 200(NODE_INTEGER\n1)
-17 --> 2(NODE_STRING\nx)
-
-linkStyle 0,2,4,5,7 stroke:orange;
-linkStyle 1,3,6 stroke:purple;
 ```
 
 ####  Recursion
