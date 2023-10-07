@@ -1,6 +1,7 @@
 # Compiler final project
 
-This project involves implementing an interpreter for variations of Scheme, a dialect of Lisp. However, the grammar of this language deviates slightly, and the functions implemented represent a subset of Scheme.
+This project involves implementing an interpreter for variations of Scheme, a dialect of Lisp.\
+However, the grammar of this language deviates slightly, and the functions implemented represent a subset of Scheme.
 
 ## Getting Started
 You can compile it by two ways.
