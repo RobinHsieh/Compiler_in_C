@@ -1,53 +1,47 @@
 <svg width="680" height="540" xmlns="http://www.w3.org/2000/svg">
-  <rect x="15" y="15" width="50" height="30" stroke="darkslateblue" fill="antiquewhite"/>
+  <path stroke="#483d8b" fill="#faebd7" d="M15 15h50v30H15z"/>
   <text x="23" y="35" font-size="18">bp→</text>
-  <rect x="242" y="15" width="50" height="30" stroke="darkslateblue" fill="antiquewhite"/>
+  <path stroke="#483d8b" fill="#faebd7" d="M242 15h50v30h-50z"/>
   <text x="248" y="35" font-size="18">←sp</text>
-  <rect x="80" y="10" width="150" height="40" stroke="darkslateblue" fill="gray"/>
+  <path stroke="#483d8b" fill="gray" d="M80 10h150v40H80z"/>
   <text x="105" y="35" font-size="18">4th old basePtr</text>
-  <rect x="80" y="50" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 50h150v40H80z"/>
   <text x="105" y="75" font-size="18">a = 2</text>
-  <rect x="80" y="90" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 90h150v40H80z"/>
   <text x="105" y="115" font-size="18">b = 0</text>
-  <rect x="80" y="130" width="150" height="40" stroke="darkslateblue" fill="gray"/>
+  <path stroke="#483d8b" fill="gray" d="M80 130h150v40H80z"/>
   <text x="105" y="155" font-size="18">3rd old basePtr</text>
-  <rect x="80" y="170" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 170h150v40H80z"/>
   <text x="105" y="195" font-size="18">a = 2</text>
-  <rect x="80" y="210" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 210h150v40H80z"/>
   <text x="105" y="235" font-size="18">b = 1</text>
-  <rect x="80" y="250" width="150" height="40" stroke="darkslateblue" fill="gray"/>
+  <path stroke="#483d8b" fill="gray" d="M80 250h150v40H80z"/>
   <text x="105" y="275" font-size="18">2nd old basePtr</text>
-  <rect x="80" y="290" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 290h150v40H80z"/>
   <text x="105" y="315" font-size="18">a = 2</text>
-  <rect x="80" y="330" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 330h150v40H80z"/>
   <text x="105" y="355" font-size="18">b = 3</text>
-  <rect x="80" y="370" width="150" height="40" stroke="darkslateblue" fill="gray"/>
+  <path stroke="#483d8b" fill="gray" d="M80 370h150v40H80z"/>
   <text x="105" y="395" font-size="18">1st old basePtr</text>
-  <rect x="80" y="410" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 410h150v40H80z"/>
   <text x="105" y="435" font-size="18">a = 2</text>
-  <rect x="80" y="450" width="150" height="40" stroke="darkslateblue" fill="aliceblue"/>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M80 450h150v40H80z"/>
   <text x="105" y="475" font-size="18">b = 3</text>
-  <rect x="80" y="490" width="150" height="80" stroke="darkslateblue" fill="lavender"/>
-  <rect x="55" y="490" width="200" height="3" stroke="darkslateblue" fill="darkslateblue"/>
+  <path stroke="#483d8b" fill="#e6e6fa" d="M80 490h150v80H80z"/>
+  <path stroke="#483d8b" fill="#483d8b" d="M55 490h200v3H55z"/>
   <text x="110" y="505" font-size="10">Stack grows upwards</text>
   <text x="85" y="525" font-size="16">passedArgumentStack</text>
-
-
-  
-
-
-  <rect x="480" y="410" width="180" height="40" stroke="darkslateblue" fill="aliceblue"/>
-  <text x="485" y="435" font-size="18">power</text>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M480 410h180v40H480z"/>
+  <text x="488" y="435" font-size="18">power</text>
   <text x="570" y="435" font-size="18">b</text>
   <text x="625" y="435" font-size="18">2</text>
-  <rect x="480" y="450" width="180" height="40" stroke="darkslateblue" fill="aliceblue"/>
-  <text x="485" y="475" font-size="18">power</text>
+  <path stroke="#483d8b" fill="#f0f8ff" d="M480 450h180v40H480z"/>
+  <text x="488" y="475" font-size="18">power</text>
   <text x="570" y="475" font-size="18">a</text>
   <text x="625" y="475" font-size="18">1</text>
-  <rect x="480" y="490" width="180" height="80" stroke="darkslateblue" fill="lavender"/>
-  <rect x="455" y="490" width="230" height="3" stroke="darkslateblue" fill="darkslateblue"/>
-  <rect x="545" y="410" width="0.1" height="80" stroke="darkslateblue" fill="lavender"/>
-  <rect x="605" y="410" width="0.1" height="80" stroke="darkslateblue" fill="lavender"/>
-  <text x="510" y="505" font-size="10">Stack grows upwards</text>
+  <path stroke="#483d8b" fill="#e6e6fa" d="M480 490h180v80H480z"/>
+  <path stroke="#483d8b" fill="#483d8b" d="M455 490h230v3H455z"/>
+  <path stroke="#483d8b" fill="#e6e6fa" d="M545 410h.1v80h-.1zm60 0h.1v80h-.1z"/>
+  <text x="525" y="505" font-size="10">Stack grows upwards</text>
   <text x="485" y="525" font-size="16">addressOfParameterTable</text>
 </svg>
