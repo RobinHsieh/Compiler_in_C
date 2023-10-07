@@ -349,11 +349,11 @@ a \times a^{(b-1)} & \text{otherwise}
 $$
 
 #### Schematic diagram
-<div class="row">
-<img src="image/stack_frame.jpg" width="320" height="550">
-<img src="image/stack_frame.jpg" width="320" height="550">
-</div>
 
-As shown in the schematic diagram, at this time, `a = ebp - 1 = 2`, `b = ebp - 2 = 0`
+As shown in the schematic diagram, at this time, `a = basePtr - 1 = 2`, `b = basePtr - 2 = 0`
+
+<img src="image/stack_frame.png" width="680" height="540">
+
+
 
 
