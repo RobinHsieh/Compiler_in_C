@@ -71,5 +71,18 @@ target_link_libraries(mini_LISP l)
 |-----|---------------------|--------------------------------------------------|--------|-----------|
 | 1.  | Recursion           | Support recursive function call                  | 5      |:o:        |
 | 2.  | Type Checking       | Print error messages for type errors             | 5      |:construction:|
-| 3.  | Nested Function     | Nested function (static scope)                   | 5      |::construction:|
+| 3.  | Nested Function     | Nested function (static scope)                   | 5      |:construction:|
 | 4.  | First-class Function| Able to pass functions, support closure          | 5      |:construction:|
+
+
+- 14
+    - 22
+        - 21
+            - 19
+                - 2
+            - 3
+                - 17
+                    - 102
+                - 0
+        - 20
+            - 100
