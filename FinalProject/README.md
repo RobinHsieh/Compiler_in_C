@@ -1,4 +1,4 @@
-# Compiler final project
+# Final project
 
 This project involves implementing an interpreter for variations of Scheme, a dialect of Lisp.\
 However, the grammar of this language deviates slightly, and the functions implemented represent a subset of Scheme.
@@ -303,3 +303,38 @@ linkStyle 0,2,4,6,7,10,12,13,15,16,18,19,21,22,23,24,26 stroke:orange;
 linkStyle 8 stroke:green;
 linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
 ```
+
+## Stack Frame
+
+### Exponentiation
+
+#### Program
+```scheme
+(define power
+  (fun (a b)
+    (if (= b 0)
+        1
+        (* a (power a (- b 1))))))
+
+(print-num (power 2 3))
+```
+
+#### Mathmatical expression
+$$
+a^b = 
+\begin{cases} 
+1 & \text{if } b = 0 \\
+a \times a^{(b-1)} & \text{otherwise}
+\end{cases}
+$$
+
+#### Schematic diagram
+
+As shown in the schematic diagram, at this time:\
+`a = passedArgumentStack[basePtr - 1] = 2`, `b = passedArgumentStack[basePtr - 2] = 0`
+
+<img src="image/stack_frame.png" width="680" height="540">
+
+
+
+

@@ -1,7 +1,7 @@
 # Compiler
 _Let's learn how to craft a compiler!_
 
-<img src="image/compiler_crafting_gril.png" width="300" height="300">
+<img src="FinalProject/image/compiler_crafting_gril.png" width="300" height="300">
 
 ## Course
 * NCU CSIE
@@ -353,7 +353,7 @@ $$
 As shown in the schematic diagram, at this time:\
 `a = passedArgumentStack[basePtr - 1] = 2`, `b = passedArgumentStack[basePtr - 2] = 0`
 
-<img src="image/stack_frame.png" width="680" height="540">
+<img src="FinalProject/image/stack_frame.png" width="680" height="540">
 
 
 
