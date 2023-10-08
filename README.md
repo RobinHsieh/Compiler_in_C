@@ -22,10 +22,10 @@ _Let's learn how to craft a compiler!_
 
 ## Recommended Learning Resources
 
-> _**lex and yacc program information**_
+> ### _**lex and yacc program information**_
 > [![IBM website](FinalProject/image/IBM_2.png)](https://www.ibm.com/docs/en/aix/7.3?topic=concepts-lex-yacc-program-information)
 
-> _**Write text parsers with yacc and lex**_
+> ### _**Write text parsers with yacc and lex**_
 > [![IBM website](FinalProject/image/IBM_1.png)](https://developer.ibm.com/tutorials/au-lexyacc/?mhsrc=ibmsearch_a&mhq=yacc)
 
 
