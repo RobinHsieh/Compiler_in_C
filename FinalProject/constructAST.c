@@ -29,7 +29,7 @@ NodeAST* addNode(NodeType nodeType, int integer, char* string, NodeAST* leftChil
 NodeAST* add_If_Node(NodeType nodeType, NodeAST* testChild, NodeAST* thenChild, NodeAST* elseChild) {
     Node_If_AST* newNode = malloc(sizeof(Node_If_AST));
     newNode->nodeType = nodeType;
-    newNode->testChild = testChild;
+    newNode->conditionChild = testChild;
     newNode->thenChild = thenChild;
     newNode->elseChild = elseChild;
     return (NodeAST*)newNode;
@@ -82,7 +82,7 @@ void traversalSTATMENT(NodeAST* nodeAst) {
             case NODE_DEFINE:
             {
                 /* going to define a variable */
-                if (nodeAst->rightChild->nodeType != NODE_FUNCTION) {
+                if (nodeAst->rightChild->nodeType != NODE_FUNCTION_CALLEE) {
                     /* bind the variable name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild` */
                     pushIntoGlobalSymbolTable(nodeAst->leftChild->string, nodeAst->rightChild, &globalLinkedList);
                 }
@@ -143,7 +143,7 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
         return judgeIF_EXPRESSION((Node_If_AST*)nodeAst);
     }
 
-    else if (nodeAst->nodeType == NODE_FUNCTION_CALL) {
+    else if (nodeAst->nodeType == NODE_FUNCTION_CALLER) {
 
         /* handle the function call */
         return handleFUNCTION_CALL( nodeAst);
@@ -233,7 +233,7 @@ NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast) {
 
     int judgement;
 
-    judgement = evaluateExpression(node_If_Ast->testChild)->integer;
+    judgement = evaluateExpression(node_If_Ast->conditionChild)->integer;
 
     if (judgement == -1) {
         return evaluateExpression(node_If_Ast->thenChild);
@@ -251,7 +251,7 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
     int numberOfArguments = 0;
 
     /* anonymous function */
-    if (nodeAst->leftChild->nodeType == NODE_FUNCTION) {
+    if (nodeAst->leftChild->nodeType == NODE_FUNCTION_CALLEE) {
 
         /* create a new function name `-anonymous-X` */
         char* functionName = malloc(20);

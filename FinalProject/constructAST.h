@@ -1,7 +1,7 @@
 #ifndef FINAL_PROJECT_CONSTRUCTAST_H
 #define FINAL_PROJECT_CONSTRUCTAST_H
 
-#define DEBUG__PRINT_TREE_STRUCTURE
+//#define DEBUG__PRINT_TREE_STRUCTURE
 //#define DEBUG__TURN_OFF_TRAVERSAL
 //#define DEBUG__FIX_FUNCTION_CALL
 
@@ -46,8 +46,8 @@ enum nodeType {
 
     NODE_PARAMETER,         // 19
     NODE_ARGUMENT,          // 20
-    NODE_FUNCTION,          // 21
-    NODE_FUNCTION_CALL,     // 22
+    NODE_FUNCTION_CALLEE,   // 21
+    NODE_FUNCTION_CALLER,   // 22
 
     NODE_STATEMENT          // 23
 };
@@ -77,7 +77,7 @@ struct nodeAST {
 
 struct node_If_AST {
     NodeType nodeType;
-    struct nodeAST* testChild;
+    struct nodeAST* conditionChild;
     struct nodeAST* thenChild;
     struct nodeAST* elseChild;
 };

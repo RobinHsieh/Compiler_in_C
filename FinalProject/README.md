@@ -102,14 +102,14 @@ title: node_If_AST
 classDiagram
     class node_If_AST{
         +enum nodeType
-        +nodeAST* testChild
+        +nodeAST* conditionChild
         +nodeAST* thenChild
         +nodeAST* elseChild
     }
-    class testChild
+    class conditionChild
     class thenChild
     class elseChild
-    testChild <|-- node_If_AST
+    conditionChild <|-- node_If_AST
     thenChild <|-- node_If_AST
     elseChild <|-- node_If_AST
 ```
@@ -138,8 +138,8 @@ classDiagram
 18. _`NODE_DEFINE`_
 19. _`NODE_PARAMETER`_
 20. _`NODE_ARGUMENT`_
-21. _`NODE_FUNCTION`_
-22. _`NODE_FUNCTION_CALL`_
+21. _`NODE_FUNCTION_CALLEE`_
+22. _`NODE_FUNCTION_CALLER`_
 23. _`NODE_STATEMENT`_
 
 ### Here are some examples of AST structure.
@@ -238,8 +238,8 @@ class 20,120,220 gray;
 
 ```mermaid
 graph TB
-14(NODE_PRINT_NUM) --> 22(NODE_FUNCTION_CALL)
-22 --> 21(NODE_FUNCTION)
+14(NODE_PRINT_NUM) --> 22(NODE_FUNCTION_CALLER)
+22 --> 21(NODE_FUNCTION_CALLEE)
 22 --> 20(NODE_ARGUMENT)
 21 --> 19(NODE_PARAMETER)
 21 --> 3(NODE_ADDITION)
@@ -274,7 +274,7 @@ graph TB
 23(NODE_STATEMENT) --> 18(NODE_DEFINE)
 23 --> 14(NODE_PRINT_NUM)
 18 --> 2(NODE_STRING\nfactorial)
-18 --> 21(NODE_FUNCTION)
+18 --> 21(NODE_FUNCTION_CALLEE)
 21 --> 19(NODE_PARAMETER)
 21 --> 16(NODE_IF_EXPRESSION)
 19 --> 102(NODE_STRING\nx)
@@ -285,7 +285,7 @@ graph TB
 10 --> 100(NODE_INTEGER\n1)
 17 --> 202(NODE_STRING\nx)
 3 --> 217(NODE_VARIABLE)
-3 --> 22(NODE_FUNCTION_CALL)
+3 --> 22(NODE_FUNCTION_CALLER)
 117 --> 302(NODE_STRING\nx)
 22 --> 402(NODE_STRING\nfactorial)
 22 --> 20(NODE_ARGUMENT)
@@ -294,7 +294,7 @@ graph TB
 4 --> 200(NODE_INTEGER\n1)
 317 --> 502(NODE_STRING\nx)
 217 --> 602(NODE_STRING\nx)
-14 --> 122(NODE_FUNCTION_CALL)
+14 --> 122(NODE_FUNCTION_CALLER)
 122 --> 702(NODE_STRING\nfactorial)
 122 --> 220(NODE_ARGUMENT)
 220 --> 300(NODE_INTEGER\n4)
@@ -333,7 +333,7 @@ $$
 As shown in the schematic diagram, at this time:\
 `a = passedArgumentStack[basePtr - 1] = 2`, `b = passedArgumentStack[basePtr - 2] = 0`
 
-<img src="image/stack_frame.png" width="680" height="540">
+<img src="FinalProject/image/stack_frame.png" width="680" height="540">
 
 
 
