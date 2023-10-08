@@ -1,7 +1,6 @@
 #include "constructAST.h"
 
 
-/* testData segment */
 GlobalSymbolTable* globalLinkedList;
 AddressOfParameterTable addressOfParameterTable[2048];
 int topOfAddressOfParameterTable = -1;

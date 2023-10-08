@@ -28,6 +28,8 @@ _Let's learn how to craft a compiler!_
 > ### _**Write text parsers with yacc and lex**_
 > [![IBM website](FinalProject/image/IBM_1.png)](https://developer.ibm.com/tutorials/au-lexyacc/?mhsrc=ibmsearch_a&mhq=yacc)
 
+> ### _**First+Follow+Predict Calculator**_
+> [![Cal website](FinalProject/image/cal.png)](https://www.usna.edu/Users/cs/wcbrown/courses/F20SI413/firstFollowPredict/ffp.html)
 
 ---
 
