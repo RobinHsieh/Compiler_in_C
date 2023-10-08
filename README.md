@@ -31,6 +31,9 @@ _Let's learn how to craft a compiler!_
 > ### _**First+Follow+Predict Calculator**_
 > [![Cal website](FinalProject/image/cal.png)](https://www.usna.edu/Users/cs/wcbrown/courses/F20SI413/firstFollowPredict/ffp.html)
 
+> ### _**Manual for GNU Bison**_
+> [![GNU website](FinalProject/image/GNU.png)](https://www.gnu.org/software/bison/manual/html_node/index.html)
+
 ---
 
 # Final Project
