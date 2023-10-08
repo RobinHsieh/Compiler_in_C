@@ -17,19 +17,28 @@ _Let's learn how to craft a compiler!_
 * Assembly Language
 
 ## Tools
-* Lex: scanning
-* Yacc: parsing, semantic analysis
+* Lex/Flex: lexical analysis(scanning)
+* Yacc/Bison: syntactic analysis(parsing), semantic analysis
+
+## Recommended Learning Resources
+
+> _**lex and yacc program information**_
+> [![IBM website](FinalProject/image/IBM_2.png)](https://www.ibm.com/docs/en/aix/7.3?topic=concepts-lex-yacc-program-information)
+
+> _**Write text parsers with yacc and lex**_
+> [![IBM website](FinalProject/image/IBM_1.png)](https://developer.ibm.com/tutorials/au-lexyacc/?mhsrc=ibmsearch_a&mhq=yacc)
+
 
 ---
 
-# Final project
+# Final Project
 
 This project involves implementing an interpreter for variations of Scheme, a dialect of Lisp.\
 However, the grammar of this language deviates slightly, and the functions implemented represent a subset of Scheme.
 
 ## Getting Started
 You can compile it by two ways.
-### 1. Shell script
+### 1. Shell Script
 ```bash
 bison -d -v -o mini_LISP.tab.c mini_LISP.y
 gcc -c -g -I.. mini_LISP.tab.c
@@ -168,7 +177,7 @@ classDiagram
 
 ### Here are some examples of AST structure.
 
-#### Addition, Muliplication, Equal
+#### Operators of Addition, Muliplication and Equal
 
 ```scheme
 (OP 1 2 3)

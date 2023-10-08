@@ -15,7 +15,15 @@ void yyerror (const char *message);
 %}
 
 %union{
-
+/* 1. Create a union structure to exchange multiple value types in the parse stack.
+ *
+ * 2. `%union` keyword identifies the yacc semantic value stack and `yyval` as a union.
+ * 
+ * 3. `yylval` is the semantic value of the look-ahead symbol, it will be pushed(shifted) into,
+ *     or popped(reduced) from the yacc semantic value stack( , which defined as: YYSTYPE yyvsa[YYINITDEPTH] ).
+ * 
+ * 4. `YYSTYPE` is a macro of alias defined as semantic value stack and `yyval`.
+ */
 NodeAST* nodeASTptr;
 int integer;
 char* string;
