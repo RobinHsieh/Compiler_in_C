@@ -20,7 +20,7 @@
   <path stroke="#483d8b" fill="#f0f8ff" d="M80 290h150v40H80z"/>
   <text x="105" y="315" font-size="18">a = 2</text>
   <path stroke="#483d8b" fill="#f0f8ff" d="M80 330h150v40H80z"/>
-  <text x="105" y="355" font-size="18">b = 3</text>
+  <text x="105" y="355" font-size="18">b = 2</text>
   <path stroke="#483d8b" fill="gray" d="M80 370h150v40H80z"/>
   <text x="105" y="395" font-size="18">1st old basePtr</text>
   <path stroke="#483d8b" fill="#f0f8ff" d="M80 410h150v40H80z"/>
