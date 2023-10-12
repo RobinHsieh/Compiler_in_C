@@ -22,17 +22,7 @@ _Let's learn how to craft a compiler!_
 
 ## Recommended Learning Resources
 
-> ### _**lex and yacc program information**_
-> [![IBM website](FinalProject/image/IBM_2.png)](https://www.ibm.com/docs/en/aix/7.3?topic=concepts-lex-yacc-program-information)
 
-> ### _**Write text parsers with yacc and lex**_
-> [![IBM website](FinalProject/image/IBM_1.png)](https://developer.ibm.com/tutorials/au-lexyacc/?mhsrc=ibmsearch_a&mhq=yacc)
-
-> ### _**First+Follow+Predict Calculator**_
-> [![Cal website](FinalProject/image/cal.png)](https://www.usna.edu/Users/cs/wcbrown/courses/F20SI413/firstFollowPredict/ffp.html)
-
-> ### _**Manual for GNU Bison**_
-> [![GNU website](FinalProject/image/GNU.png)](https://www.gnu.org/software/bison/manual/html_node/index.html)
 
 ---
 
