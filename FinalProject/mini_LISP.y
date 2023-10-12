@@ -19,7 +19,7 @@ void yyerror (const char *message);
 %}
 
 %union{
-/* 1. Create an union structure to exchange multiple value types in the parser's stack.
+/* 1. Create an union structure to exchange multiple value types in the semantic value stack.
  *
  * 2. `%union` keyword identifies the yacc semantic value stack and `yyval` as a union.
  * 
