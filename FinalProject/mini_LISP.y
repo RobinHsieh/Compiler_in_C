@@ -1,4 +1,8 @@
 %{
+/* Here is the Prologue section,
+ * that contains macro definitions and declarations of functions
+ * and variables that are used in the actions in the grammar rules.
+ */
 
 /* Q: Should be placed before include "mini_LISP.tab.h", why?
  * A: Because in "mini_LISP.tab.h", there have some data structure need to include "constructAST.h" first */
@@ -210,7 +214,7 @@ variable       : ID {
                ;
 
 fun_exp        : '(' FUNCTION fun_ids fun_body ')' {
-               $$ = addNode(NODE_FUNCTION, 0, NULL, $3, $4);
+               $$ = addNode(NODE_FUNCTION_CALLEE, 0, NULL, $3, $4);
                }
                ;
 
@@ -231,10 +235,10 @@ fun_body       : exp
                ;
 
 fun_call       : '(' fun_exp params ')' {
-               $$ = addNode(NODE_FUNCTION_CALL, 0, NULL, $2, $3);
+               $$ = addNode(NODE_FUNCTION_CALLER, 0, NULL, $2, $3);
                }
                | '(' fun_name params ')' {
-               $$ = addNode(NODE_FUNCTION_CALL, 0, NULL, $2, $3);
+               $$ = addNode(NODE_FUNCTION_CALLER, 0, NULL, $2, $3);
                }
                ;
 
