@@ -5,12 +5,14 @@ However, the grammar of this language deviates slightly, and the functions imple
 
 ## File Structure
 
-├── TestData\
-│   ├── ….lsp\
-├── mini_LISP.l    : lexical analyzer(scanner)\
-├── mini_LISP.y    : syntactic analyzer(parser), semantic analyzer\
-├── constructAST.c : semantic analyzer\
-├── constructAST.h\
+```
+├── TestData
+│   ├── ….lsp
+├── mini_LISP.l    : lexical analyzer(scanner)
+├── mini_LISP.y    : syntactic analyzer(parser), semantic analyzer
+├── constructAST.c : semantic analyzer
+├── constructAST.h
+```
 
 ## Getting Started
 You can compile it by two ways.
