@@ -3,7 +3,7 @@
 
 //#define DEBUG__PRINT_TREE_STRUCTURE
 //#define DEBUG__TURN_OFF_TRAVERSAL
-//#define DEBUG__FIX_FUNCTION_CALL
+//#define DEBUG__FIX_FUNCTION_CALLER
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -90,7 +90,7 @@ NodeAST* add_If_Node(NodeType nodeType, NodeAST* testChild, NodeAST* thenChild, 
 void traversalSTATMENT(NodeAST* nodeAst);
 NodeAST* evaluateExpression(NodeAST* nodeAst);
 NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast);
-NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst);
+NodeAST* handleFUNCTION_CALLER(NodeAST* nodeAst);
 void traversalPARAMETER(NodeAST* nodeAst, char* functionName, int parameterOrder);
 void traversalARGUMENT(NodeAST* nodeAst, int* numberOfArguments);
 #if defined(DEBUG__PRINT_TREE_STRUCTURE)

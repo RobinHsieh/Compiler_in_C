@@ -145,7 +145,7 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
     else if (nodeAst->nodeType == NODE_FUNCTION_CALLER) {
 
         /* handle the function call */
-        return handleFUNCTION_CALL( nodeAst);
+        return handleFUNCTION_CALLER( nodeAst);
     }
 
     else {
@@ -244,10 +244,14 @@ NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast) {
     }
 }
 
-NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
+NodeAST* handleFUNCTION_CALLER(NodeAST* nodeAst) {
 
     NodeAST* functionReturnNodeAst;
     int numberOfArguments = 0;
+
+    /* note: need to traversal arguments before update the current function scope */
+    /* traversal arguments tree and push arguments into the passed argument stack */
+    traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
 
     /* anonymous function */
     if (nodeAst->leftChild->nodeType == NODE_FUNCTION_CALLEE) {
@@ -257,7 +261,7 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
         sprintf(functionName, "-anonymous-%d", anonymousFunctionOrder);
         anonymousFunctionOrder++;
         
-        /* update the current fuction scope */
+        /* update the current function scope */
         topOfActiveFunctionNameStack++;
         activeFunctionNameStack[topOfActiveFunctionNameStack] = functionName;
 
@@ -271,13 +275,10 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
     /* named function */
     else {
 
-        /* update the current fuction scope */
+        /* update the current function scope */
         topOfActiveFunctionNameStack++;
         activeFunctionNameStack[topOfActiveFunctionNameStack] = nodeAst->leftChild->string;
     }
-
-    /* traversal arguments tree and push arguments into the passed argument stack */
-    traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
 
     /* push basePtrOfArgument into the passed argument stack */
     stackPtrOfArgument++;
@@ -294,7 +295,7 @@ NodeAST* handleFUNCTION_CALL(NodeAST* nodeAst) {
     /* pop arguments from the passed argument stack */
     stackPtrOfArgument -= numberOfArguments;
 
-    /* return the fuction scope */
+    /* return the function scope */
     topOfActiveFunctionNameStack--;
 
     return functionReturnNodeAst;
