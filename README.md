@@ -124,7 +124,7 @@ target_link_libraries(mini_LISP l)
 | 3.  | Nested Function     | Nested function (static scope)                   | 5      |:construction:|
 | 4.  | First-class Function| Able to pass functions, support closure          | 5      |:o::construction:|
 
-_**Note: Some test cases of First-class Function are also used the feature of nested function.**_
+_**Note: Some test cases of First-class Function also use the feature of nested function.**_
 
 ## AST Structure
 ### Basic structure of nodes in AST is shown below.
