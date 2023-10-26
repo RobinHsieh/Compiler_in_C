@@ -4,12 +4,14 @@
 //#define DEBUG__PRINT_TREE_STRUCTURE
 //#define DEBUG__TURN_OFF_TRAVERSAL
 //#define DEBUG__FIX_FUNCTION_CALLER
+//#define DEBUG__FIRST_CLASS_FUNCTION
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 typedef enum nodeType NodeType;
+typedef enum symbolType SymbolType;
 typedef struct globalSymbolTable GlobalSymbolTable;
 typedef struct nodeAST NodeAST;
 typedef struct node_If_AST Node_If_AST;
@@ -52,8 +54,14 @@ enum nodeType {
     NODE_STATEMENT          // 23
 };
 
+enum symbolType {
+    SYMBOL_VARIABLE,        // 0
+    SYMBOL_FUNCTION_NAME    // 1
+};
+
 struct globalSymbolTable {
     char* identifier;
+    SymbolType symbolType;
     struct nodeAST* expression;
     struct globalSymbolTable* nextPtr;
 };
@@ -64,12 +72,11 @@ struct addressOfParameterTable {
     int offsetAddress;
 };
 
-
 extern char* activeFunctionNameStack[2048];
 
 struct nodeAST {
     NodeType nodeType;
-    int integer;
+    int integer; // test, test
     char* string;
     struct nodeAST* leftChild;
     struct nodeAST* rightChild;
@@ -100,8 +107,8 @@ void traversalAST_postorder(NodeAST* root);
 #endif
 
 /* deal with global symbol table */
-void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymbolTable** head);
-NodeAST* findGlobalSymbolTableNode(char* identifier);
+void pushIntoGlobalSymbolTable(char* identifier, SymbolType symbolType, NodeAST* expression, GlobalSymbolTable** head);
+NodeAST* findGlobalSymbolTableNode(char* identifier, SymbolType* symbolType);
 int findAddressOfParameterTable(char* functionName, char* identifier);
 
 /* deal with address of parameter table*/

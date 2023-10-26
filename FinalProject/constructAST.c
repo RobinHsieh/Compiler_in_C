@@ -10,7 +10,7 @@ int topOfActiveFunctionNameStack = 0;
 
 int anonymousFunctionOrder = 1;
 
-int passedArgumentStack[2048];
+NodeAST* passedArgumentStack[2048];
 int stackPtrOfArgument = -1;
 int basePtrOfArgument = -1;
 
@@ -83,13 +83,13 @@ void traversalSTATMENT(NodeAST* nodeAst) {
                 /* going to define a variable */
                 if (nodeAst->rightChild->nodeType != NODE_FUNCTION_CALLEE) {
                     /* bind the variable name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild` */
-                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, nodeAst->rightChild, &globalLinkedList);
+                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, SYMBOL_VARIABLE, nodeAst->rightChild, &globalLinkedList);
                 }
 
                 /* going to define a function */
                 else {
                     /* bind the function name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild->rightChild` */
-                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, nodeAst->rightChild->rightChild, &globalLinkedList);
+                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, SYMBOL_FUNCTION_NAME, nodeAst->rightChild->rightChild, &globalLinkedList);
 
                     /* push the parameters into AddressOfParameterTable */
                     traversalPARAMETER(nodeAst->rightChild->leftChild, nodeAst->leftChild->string, 0);
@@ -109,21 +109,40 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
     /* return part: leaf node */
     if (nodeAst->nodeType == NODE_VARIABLE) {
 
-        NodeAST* newLeafNodeAst = malloc(sizeof(NodeAST));
+        NodeAST* newExpressionNodeAst = NULL;
+        NodeAST* newLeafNodeAst;
+        SymbolType symbolType;
 
         /* deal with variable */
         if (strcmp(activeFunctionNameStack[topOfActiveFunctionNameStack], "-none") == 0) {
-            newLeafNodeAst = evaluateExpression(findGlobalSymbolTableNode(nodeAst->leftChild->string));
+            newExpressionNodeAst = findGlobalSymbolTableNode(nodeAst->leftChild->string, &symbolType);
         }
 
+        /* deal with parameter */
         else {
             int address = findAddressOfParameterTable(activeFunctionNameStack[topOfActiveFunctionNameStack], nodeAst->leftChild->string);
             if (address != 0) {
-                newLeafNodeAst->nodeType = NODE_INTEGER; // It can also be NODE_BOOLEAN, later we will deal with it.
-                newLeafNodeAst->integer = passedArgumentStack[basePtrOfArgument - address];
+                /* parameter is a expression except function expression */
+                if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_INTEGER || passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_BOOLEAN) {
+                    newLeafNodeAst = addNode(passedArgumentStack[basePtrOfArgument - address]->nodeType, passedArgumentStack[basePtrOfArgument - address]->integer, NULL, NULL, NULL);
+                }
+                /* parameter is a function expression */
+                else {
+                    newLeafNodeAst = passedArgumentStack[basePtrOfArgument - address];
+                }
             }
             else {
-                newLeafNodeAst = evaluateExpression(findGlobalSymbolTableNode(nodeAst->leftChild->string));
+                newExpressionNodeAst = findGlobalSymbolTableNode(nodeAst->leftChild->string, &symbolType);
+            }
+        }
+
+        /* don't need to evaluate the function name when traversing the arguments */
+        if (newExpressionNodeAst) {
+            if (symbolType == SYMBOL_FUNCTION_NAME) {
+                newLeafNodeAst = nodeAst->leftChild;
+            }
+            else {
+                newLeafNodeAst = evaluateExpression(newExpressionNodeAst);
             }
         }
         return newLeafNodeAst;
@@ -136,7 +155,6 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
         return newLeafNodeAst;
     }
 
-
     /* recursive part: calculate from top to bottom */
     else if (nodeAst->nodeType == NODE_IF_EXPRESSION) {
         return judgeIF_EXPRESSION((Node_If_AST*)nodeAst);
@@ -145,7 +163,7 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
     else if (nodeAst->nodeType == NODE_FUNCTION_CALLER) {
 
         /* handle the function call */
-        return handleFUNCTION_CALLER( nodeAst);
+        return handleFUNCTION_CALLER(nodeAst);
     }
 
     else {
@@ -247,9 +265,14 @@ NodeAST* judgeIF_EXPRESSION(Node_If_AST* node_If_Ast) {
 NodeAST* handleFUNCTION_CALLER(NodeAST* nodeAst) {
 
     NodeAST* functionReturnNodeAst;
+    NodeAST* functionExpressionNodeAst;
+    SymbolType symbolType;
     int numberOfArguments = 0;
+    char* functionName = malloc(20);
+    int address;
 
-    /* note: need to traversal arguments before update the current function scope */
+    /* note: need to traversal arguments before update the current function scope,
+     * because if argument are parameters, these parameters are belong to old function scope instead of new. */
     /* traversal arguments tree and push arguments into the passed argument stack */
     traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
 
@@ -257,39 +280,64 @@ NodeAST* handleFUNCTION_CALLER(NodeAST* nodeAst) {
     if (nodeAst->leftChild->nodeType == NODE_FUNCTION_CALLEE) {
 
         /* create a new function name `-anonymous-X` */
-        char* functionName = malloc(20);
         sprintf(functionName, "-anonymous-%d", anonymousFunctionOrder);
         anonymousFunctionOrder++;
-        
-        /* update the current function scope */
-        topOfActiveFunctionNameStack++;
-        activeFunctionNameStack[topOfActiveFunctionNameStack] = functionName;
 
         /* bind the function name `-anonymous-X` with the expression `nodeAst->leftChild->rightChild` */
-        pushIntoGlobalSymbolTable(functionName, nodeAst->leftChild->rightChild, &globalLinkedList);
+        pushIntoGlobalSymbolTable(functionName, SYMBOL_FUNCTION_NAME, nodeAst->leftChild->rightChild, &globalLinkedList);
 
         /* push parameters into AddressOfParameterTable */
-        traversalPARAMETER(nodeAst->leftChild->leftChild, activeFunctionNameStack[topOfActiveFunctionNameStack], 0);
+        traversalPARAMETER(nodeAst->leftChild->leftChild, functionName, 0);
     }
-
-    /* named function */
+    /* named function of variable */
     else {
-
-        /* update the current function scope */
-        topOfActiveFunctionNameStack++;
-        activeFunctionNameStack[topOfActiveFunctionNameStack] = nodeAst->leftChild->string;
+        strcpy(functionName, nodeAst->leftChild->string);
     }
+
+    /* find the bound function expression from the function name */
+    address = findAddressOfParameterTable(activeFunctionNameStack[topOfActiveFunctionNameStack], functionName);
+
+    /* function is passed as an argument */
+    if (strcmp(activeFunctionNameStack[topOfActiveFunctionNameStack], "-none") != 0 && address != 0) {
+
+        /* argument is function expression */
+        if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_FUNCTION_CALLEE) {
+
+            /* create a new function name `-anonymous-X` */
+            sprintf(functionName, "-anonymous-%d", anonymousFunctionOrder);
+            anonymousFunctionOrder++;
+
+            /* push parameters into AddressOfParameterTable */
+            traversalPARAMETER(passedArgumentStack[basePtrOfArgument - address]->leftChild, functionName, 0);
+
+            /* evaluate the function's expression */
+            functionExpressionNodeAst = passedArgumentStack[basePtrOfArgument - address]->rightChild;
+        }
+        /* argument is function name */
+        else {
+            strcpy(functionName, passedArgumentStack[basePtrOfArgument - address]->string);
+            functionExpressionNodeAst = findGlobalSymbolTableNode(functionName, &symbolType);
+        }
+    }
+    /* function is a variable */
+    else {
+        functionExpressionNodeAst = findGlobalSymbolTableNode(functionName, &symbolType);
+    }
+
+    /* update the current function scope */
+    topOfActiveFunctionNameStack++;
+    activeFunctionNameStack[topOfActiveFunctionNameStack] = functionName;
 
     /* push basePtrOfArgument into the passed argument stack */
     stackPtrOfArgument++;
-    passedArgumentStack[stackPtrOfArgument] = basePtrOfArgument;
+    passedArgumentStack[stackPtrOfArgument] = addNode(NODE_INTEGER, basePtrOfArgument, NULL, NULL, NULL);
     basePtrOfArgument = stackPtrOfArgument;
 
     /* call the function */
-    functionReturnNodeAst = evaluateExpression(findGlobalSymbolTableNode(activeFunctionNameStack[topOfActiveFunctionNameStack]));
+    functionReturnNodeAst = evaluateExpression(functionExpressionNodeAst);
 
     /* pop basePtrOfArgument from the passed argument stack */
-    basePtrOfArgument = passedArgumentStack[stackPtrOfArgument];
+    basePtrOfArgument = passedArgumentStack[stackPtrOfArgument]->integer;
     stackPtrOfArgument--;
 
     /* pop arguments from the passed argument stack */
@@ -333,7 +381,14 @@ void traversalARGUMENT(NodeAST* nodeAst, int* numberOfArguments) {
         /* push arguments into passed argument stack */
         traversalARGUMENT(nodeAst->rightChild, numberOfArguments);
         stackPtrOfArgument++;
-        passedArgumentStack[stackPtrOfArgument] = evaluateExpression(nodeAst->leftChild)->integer;
+
+        /* don't need to evaluate the function expression when traversing the arguments */
+        if (nodeAst->leftChild->nodeType == NODE_FUNCTION_CALLEE) {
+            passedArgumentStack[stackPtrOfArgument] = nodeAst->leftChild;
+        }
+        else {
+            passedArgumentStack[stackPtrOfArgument] = evaluateExpression(nodeAst->leftChild);
+        }
     }
 }
 
@@ -345,7 +400,7 @@ void pushIntoAddressOfParameterTable(char* functionName, char* identifier, int o
     addressOfParameterTable[topOfAddressOfParameterTable].offsetAddress = offsetAddress;
 }
 
-void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymbolTable** head) {
+void pushIntoGlobalSymbolTable(char* identifier, SymbolType symbolType, NodeAST* expression, GlobalSymbolTable** head) {
 
     GlobalSymbolTable* directTable = *head;
     GlobalSymbolTable* previousTable = NULL;
@@ -353,6 +408,7 @@ void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymb
     /* create a new directTable */
     GlobalSymbolTable* newTable = malloc(sizeof(GlobalSymbolTable));
     newTable->identifier = identifier;
+    newTable->symbolType = symbolType;
     newTable->expression = expression;
     newTable->nextPtr = NULL;
 
@@ -362,7 +418,6 @@ void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymb
         directTable = directTable->nextPtr;
     }
 
-
     if (previousTable != NULL) {
         previousTable->nextPtr = newTable;
     }
@@ -371,19 +426,21 @@ void pushIntoGlobalSymbolTable(char* identifier, NodeAST* expression, GlobalSymb
     }
 }
 
-NodeAST* findGlobalSymbolTableNode(char* identifier) {
+NodeAST* findGlobalSymbolTableNode(char* identifier, SymbolType* symbolType) {
 
     GlobalSymbolTable* table = globalLinkedList;
 
     /* iteration */
     while (table != NULL) {
         if (strcmp(table->identifier, identifier) == 0) {
+            *symbolType = table->symbolType;
             return table->expression;
         }
         table = table->nextPtr;
     }
 
     /* shall never pass through here */
+    *symbolType = table->symbolType;
     return table->expression;
 }
 
