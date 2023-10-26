@@ -122,8 +122,9 @@ target_link_libraries(mini_LISP l)
 | 1.  | Recursion           | Support recursive function call                  | 5      |:o:        |
 | 2.  | Type Checking       | Print error messages for type errors             | 5      |:construction:|
 | 3.  | Nested Function     | Nested function (static scope)                   | 5      |:construction:|
-| 4.  | First-class Function| Able to pass functions, support closure          | 5      |:construction:|
+| 4.  | First-class Function| Able to pass functions, support closure          | 5      |:o::construction:|
 
+_**Note: Some test cases of First-class Function are also used the feature of nested function.**_
 
 ## AST Structure
 ### Basic structure of nodes in AST is shown below.
@@ -351,6 +352,98 @@ graph TB
 linkStyle 0,2,4,6,7,10,12,13,15,16,18,19,21,22,23,24,26 stroke:orange;
 linkStyle 8 stroke:green;
 linkStyle 1,3,5,9,11,14,17,20,25 stroke:purple;
+```
+
+#### First-class Function (pass argument as function expression)
+
+```scheme
+(define foo
+  (fun (f x) (f x)))
+
+(print-num
+  (foo (fun (x) (- x 1)) 10))
+```
+
+```mermaid
+graph TB
+23(NODE_STATEMENT) --> 18(NODE_DEFINE)
+23 --> 114(NODE_PRINT_NUM)
+18 --> 2(NODE_STRING\nfoo)
+18 --> 21(NODE_FUNCTION_CALLEE)
+21 --> 19(NODE_PARAMETER)
+21 --> 22(NODE_FUNCTION_CALLER)
+19 --> 102(NODE_STRING\nf)
+19 --> 119(NODE_PARAMETER)
+119 --> 202(NODE_STRING\nx)
+22 --> 302(NODE_STRING\nf)
+22 --> 20(NODE_ARGUMENT)
+20 --> 17(NODE_VARIABLE)
+17 --> 402(NODE_STRING\nx)
+114 --> 122(NODE_FUNCTION_CALLER)
+122 --> 502(NODE_STRING\nfoo)
+122 --> 120(NODE_ARGUMENT)
+120 --> 121(NODE_FUNCTION_CALLEE)
+120 --> 220(NODE_ARGUMENT)
+121 --> 219(NODE_PARAMETER)
+121 --> 4(NODE_SUBTRACTION)
+219 --> 602(NODE_STRING\nx)
+4 --> 317(NODE_VARIABLE)
+4 --> 0(NODE_INTEGER\n1)
+317 --> 702(NODE_STRING\nx)
+220 --> 300(NODE_INTEGER\n10)
+
+linkStyle 0,2,4,6,8,9,11,12,13,14,16,18,20,21,23,24 stroke:orange;
+linkStyle 1,3,5,7,10,15,17,19,22 stroke:purple;
+```
+
+#### First-class Function (pass argument as function name)
+
+```scheme
+(define foo
+  (fun (f x) (f x)))
+
+(define hihi
+  (fun (x) (- x 1)))
+
+(print-num
+  (foo hihi 10))
+```
+
+```mermaid
+graph TB
+23(NODE_STATEMENT) --> 123(NODE_STATEMENT)
+23 --> 214(NODE_PRINT_NUM)
+123 --> 18(NODE_DEFINE)
+123 --> 118(NODE_DEFINE)
+18 --> 2(NODE_STRING\nfoo)
+18 --> 21(NODE_FUNCTION_CALLEE)
+21 --> 19(NODE_PARAMETER)
+21 --> 22(NODE_FUNCTION_CALLER)
+19 --> 102(NODE_STRING\nf)
+19 --> 119(NODE_PARAMETER)
+119 --> 202(NODE_STRING\nx)
+22 --> 302(NODE_STRING\nf)
+22 --> 20(NODE_ARGUMENT)
+20 --> 17(NODE_VARIABLE)
+17 --> 402(NODE_STRING\nx)
+118 --> 502(NODE_STRING\nhihi)
+118 --> 121(NODE_FUNCTION_CALLEE)
+121 --> 219(NODE_PARAMETER)
+121 --> 4(NODE_SUBTRACTION)
+219 --> 602(NODE_STRING\nx)
+4 --> 117(NODE_VARIABLE)
+4 --> 0(NODE_INTEGER\n1)
+117 --> 702(NODE_STRING\nx)
+214 --> 122(NODE_FUNCTION_CALLER)
+122 --> 802(NODE_STRING\nfoo)
+122 --> 220(NODE_ARGUMENT)
+220 --> 217(NODE_VARIABLE)
+220 --> 320(NODE_ARGUMENT)
+217 --> 902(NODE_STRING\nhihi)
+320 --> 100(NODE_INTEGER\n10)
+
+linkStyle 0,2,4,6,8,10,11,13,14,15,17,19,20,22,23,24,26,28,29 stroke:orange;
+linkStyle 1,3,5,7,9,12,16,18,21,25,27 stroke:purple;
 ```
 
 ## Stack Frame
