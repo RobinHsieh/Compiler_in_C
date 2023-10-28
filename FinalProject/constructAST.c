@@ -105,8 +105,16 @@ void traversalSTATMENT(NodeAST* nodeAst) {
 
 NodeAST* evaluateExpression(NodeAST* nodeAst) {
 
+    /* Kindly reminder
+     *
+     * The methods of evaluating expression below can be roughly classified into three types:
+     * 1. Traverse downwards, use Inherited attribute: IF_EXPRESSION, FUNCTION_CALLER, VARIABLE
+     * 2. Visit leaf nodes, get the semantic value and start to return: INTEGER, BOOLEAN
+     * 3. Return upwards, use Synthesized attribute: GREATER, SMALLER, AND, OR, NOT, EQUAL, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, MODULUS
+     */
 
-    /* return part: leaf node */
+
+    /* Type 1: Traverse downwards, use Inherited attribute */
     if (nodeAst->nodeType == NODE_VARIABLE) {
 
         NodeAST* newExpressionNodeAst = NULL;
@@ -148,6 +156,19 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
         return newLeafNodeAst;
     }
 
+    /* Type 1: Traverse downwards, use Inherited attribute */
+    else if (nodeAst->nodeType == NODE_IF_EXPRESSION) {
+        return judgeIF_EXPRESSION((Node_If_AST*)nodeAst);
+    }
+
+    /* Type 1: Traverse downwards, use Inherited attribute */
+    else if (nodeAst->nodeType == NODE_FUNCTION_CALLER) {
+
+        /* handle the function call */
+        return handleFUNCTION_CALLER(nodeAst);
+    }
+
+    /* Type 2: Visit leaf nodes, get the semantic value and start to return */
     else if (nodeAst->nodeType == NODE_INTEGER || nodeAst->nodeType == NODE_BOOLEAN) {
         NodeAST* newLeafNodeAst = malloc(sizeof(NodeAST));
         newLeafNodeAst->nodeType = nodeAst->nodeType;
@@ -155,19 +176,8 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
         return newLeafNodeAst;
     }
 
-    /* recursive part: calculate from top to bottom */
-    else if (nodeAst->nodeType == NODE_IF_EXPRESSION) {
-        return judgeIF_EXPRESSION((Node_If_AST*)nodeAst);
-    }
-
-    else if (nodeAst->nodeType == NODE_FUNCTION_CALLER) {
-
-        /* handle the function call */
-        return handleFUNCTION_CALLER(nodeAst);
-    }
-
+    /* Type 3: Return upwards, use Synthesized attribute */
     else {
-        /* recursive part: calculate from bottom to top */
         NodeAST* left_child = evaluateExpression(nodeAst->leftChild);
         NodeAST* right_child;
 
@@ -175,10 +185,8 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
         if (nodeAst->rightChild != NULL) {
             right_child = evaluateExpression(nodeAst->rightChild);
         }
-
         NodeAST* newNodeAst = malloc(sizeof(NodeAST));
 
-        /* return part: internal node */
         switch (nodeAst->nodeType) {
             case NODE_GREATER:
                 newNodeAst->nodeType = NODE_BOOLEAN;
