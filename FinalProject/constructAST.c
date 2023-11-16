@@ -142,8 +142,8 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
                 activeFunctionNameStack[topOfActiveFunctionNameStack], nodeAst->leftChild->string);
             if (address != 0) {
                 /* parameter is a expression except function expression */
-                if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_INTEGER
-                || passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_BOOLEAN) {
+                if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_INTEGER ||
+                passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_BOOLEAN) {
                     newLeafNodeAst = addNode(
                         passedArgumentStack[basePtrOfArgument - address]->nodeType,
                         passedArgumentStack[basePtrOfArgument - address]->integer, NULL, NULL, NULL);
@@ -470,8 +470,8 @@ NodeAST* findGlobalSymbolTableNode(char* identifier, SymbolType* symbolType) {
 
 int findAddressOfParameterTable(char* functionName, char* identifier) {
     for (int i = 0; i <= topOfAddressOfParameterTable; i++) {
-        if (strcmp(addressOfParameterTable[i].functionName, functionName) == 0
-        && strcmp(addressOfParameterTable[i].identifier, identifier) == 0) {
+        if (strcmp(addressOfParameterTable[i].functionName, functionName) == 0 &&
+        strcmp(addressOfParameterTable[i].identifier, identifier) == 0) {
             return addressOfParameterTable[i].offsetAddress;
         }
     }
