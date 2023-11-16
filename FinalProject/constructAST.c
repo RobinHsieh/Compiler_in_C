@@ -1,6 +1,10 @@
 #include "constructAST.h"
 
 
+/*
+ * Global symbol table
+ * Parameter address table
+ */
 GlobalSymbolTable* globalLinkedList;
 AddressOfParameterTable addressOfParameterTable[2048];
 int topOfAddressOfParameterTable = -1;
@@ -10,6 +14,7 @@ int topOfActiveFunctionNameStack = 0;
 
 int anonymousFunctionOrder = 1;
 
+/* Stack frame of arguments */
 NodeAST* passedArgumentStack[2048];
 int stackPtrOfArgument = -1;
 int basePtrOfArgument = -1;
@@ -83,13 +88,15 @@ void traversalSTATMENT(NodeAST* nodeAst) {
                 /* going to define a variable */
                 if (nodeAst->rightChild->nodeType != NODE_FUNCTION_CALLEE) {
                     /* bind the variable name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild` */
-                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, SYMBOL_VARIABLE, nodeAst->rightChild, &globalLinkedList);
+                    pushIntoGlobalSymbolTable(
+                        nodeAst->leftChild->string, SYMBOL_VARIABLE, nodeAst->rightChild, &globalLinkedList);
                 }
 
                 /* going to define a function */
                 else {
                     /* bind the function name `nodeAst->leftChild->string` with the expression `nodeAst->rightChild->rightChild` */
-                    pushIntoGlobalSymbolTable(nodeAst->leftChild->string, SYMBOL_FUNCTION_NAME, nodeAst->rightChild->rightChild, &globalLinkedList);
+                    pushIntoGlobalSymbolTable(
+                        nodeAst->leftChild->string, SYMBOL_FUNCTION_NAME, nodeAst->rightChild->rightChild, &globalLinkedList);
 
                     /* push the parameters into AddressOfParameterTable */
                     traversalPARAMETER(nodeAst->rightChild->leftChild, nodeAst->leftChild->string, 0);
@@ -105,12 +112,15 @@ void traversalSTATMENT(NodeAST* nodeAst) {
 
 NodeAST* evaluateExpression(NodeAST* nodeAst) {
 
-    /* Kindly reminder
+    /*
+     * Kindly reminder
      *
      * The methods of evaluating expression below can be roughly classified into three types:
+     * 
      * 1. Traverse downwards, use Inherited attribute: IF_EXPRESSION, FUNCTION_CALLER, VARIABLE
      * 2. Visit leaf nodes, get the semantic value and start to return: INTEGER, BOOLEAN
-     * 3. Return upwards, use Synthesized attribute: GREATER, SMALLER, AND, OR, NOT, EQUAL, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, MODULUS
+     * 3. Return upwards, use Synthesized attribute: GREATER, SMALLER,
+     *    AND, OR, NOT, EQUAL, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, MODULUS
      */
 
 
@@ -128,11 +138,15 @@ NodeAST* evaluateExpression(NodeAST* nodeAst) {
 
         /* deal with parameter */
         else {
-            int address = findAddressOfParameterTable(activeFunctionNameStack[topOfActiveFunctionNameStack], nodeAst->leftChild->string);
+            int address = findAddressOfParameterTable(
+                activeFunctionNameStack[topOfActiveFunctionNameStack], nodeAst->leftChild->string);
             if (address != 0) {
                 /* parameter is a expression except function expression */
-                if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_INTEGER || passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_BOOLEAN) {
-                    newLeafNodeAst = addNode(passedArgumentStack[basePtrOfArgument - address]->nodeType, passedArgumentStack[basePtrOfArgument - address]->integer, NULL, NULL, NULL);
+                if (passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_INTEGER
+                || passedArgumentStack[basePtrOfArgument - address]->nodeType == NODE_BOOLEAN) {
+                    newLeafNodeAst = addNode(
+                        passedArgumentStack[basePtrOfArgument - address]->nodeType,
+                        passedArgumentStack[basePtrOfArgument - address]->integer, NULL, NULL, NULL);
                 }
                 /* parameter is a function expression */
                 else {
@@ -279,8 +293,10 @@ NodeAST* handleFUNCTION_CALLER(NodeAST* nodeAst) {
     char* functionName = malloc(20);
     int address;
 
-    /* note: need to traversal arguments before update the current function scope,
-     * because if argument are parameters, these parameters are belong to old function scope instead of new. */
+    /*
+     * Note: need to traversal arguments before update the current function scope,
+     * because if argument are parameters, these parameters are belong to old function scope instead of new.
+     */
     /* traversal arguments tree and push arguments into the passed argument stack */
     traversalARGUMENT(nodeAst->rightChild, &numberOfArguments);
 
@@ -454,7 +470,8 @@ NodeAST* findGlobalSymbolTableNode(char* identifier, SymbolType* symbolType) {
 
 int findAddressOfParameterTable(char* functionName, char* identifier) {
     for (int i = 0; i <= topOfAddressOfParameterTable; i++) {
-        if (strcmp(addressOfParameterTable[i].functionName, functionName) == 0 && strcmp(addressOfParameterTable[i].identifier, identifier) == 0) {
+        if (strcmp(addressOfParameterTable[i].functionName, functionName) == 0
+        && strcmp(addressOfParameterTable[i].identifier, identifier) == 0) {
             return addressOfParameterTable[i].offsetAddress;
         }
     }
