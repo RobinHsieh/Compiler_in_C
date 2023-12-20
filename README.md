@@ -448,9 +448,11 @@ linkStyle 1,3,5,7,9,12,16,18,21,25,27 stroke:purple;
 
 ## Stack Frame
 
-### Exponentiation
+Here is an example about exponentiation to show that how the stack frame works
 
-#### Program
+### For instance: Exponentiation
+
+#### Implement using MiniLisp
 ```scheme
 (define power
   (fun (a b)
