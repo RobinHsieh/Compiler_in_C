@@ -16,57 +16,57 @@ int errorIndex = 0;
 
 [+-]    {
          errorIndex += yyleng;
-         printf("%s ", yytext);//
+         // printf("%s ", yytext);//
          yylval.loc = errorIndex;
          return yytext[0];
 }
 
 "*"     {
          errorIndex += yyleng;
-         printf("%s ", yytext);//
+         // printf("%s ", yytext);//
          yylval.loc = errorIndex;
          return yytext[0];
 }
 
 ","     {
          errorIndex += yyleng;
-         printf("%s ", ",");//
+         // printf("%s ", ",");//
          return yytext[0];
 }
 
 "["     {
          errorIndex += yyleng;
-         printf("%s ", "[");//
+         // printf("%s ", "[");//
          return yytext[0];
 }  // Left Square BraCket
 
 "]"     {
          errorIndex += yyleng;
-         printf("%s ", "]");//
+         // printf("%s ", "]");//
          return yytext[0];
 }  // Right Square BraCket
 
 "("     {
          errorIndex += yyleng;
-         printf("%s ", "(");//
+         // printf("%s ", "(");//
          return yytext[0];
 }   // Left BraCket
 
 ")"     {
          errorIndex += yyleng;
-         printf("%s ", ")");//
+         // printf("%s ", ")");//
          return yytext[0];
 }   // Right BraCket
 
 "^T"    {
          errorIndex += yyleng;
-         printf("%s ", yytext);//
+         // printf("%s ", yytext);//
          return TRANS;
 }    // TransPose
 
 [0-9]+  {
          errorIndex += yyleng;
-         printf("%d ", atoi(yytext));
+         // printf("%d ", atoi(yytext));
          yylval.ival = atoi(yytext);
          return NUM;
 }
